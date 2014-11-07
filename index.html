@@ -1,18 +1,73 @@
-<!doctype html>
+<!DOCTYPE html>
+
 <html>
-	<head>
-		<title>Angular tutorial</title>
-		<link rel="stylesheet" href="css/main.css">
+<head>
+<!-- Allows us to use æøå etc. -->
+<meta charset='utf-8'>
 
-		<!-- Latest compiled and minified CSS -->
-		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css">
+<!-- Makes the page mobile-friendly. -->
+<meta name="viewport" content="width=device-width, initial-scale=1">
 
-		<!-- Optional theme -->
-		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap-theme.min.css">
-	</head>
+<title>JonasBrotherinos App</title>
+<link rel="stylesheet" href="css/main.css">
 
-	<body>
-	
+<!-- Link the javascripts -->
+<script type="text/javascript" src="js/angular.min.js"></script>
+<script type="text/javascript" src="js/main.js"></script>
+
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css">
+
+<!-- Optional theme -->
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap-theme.min.css">
+</head>
+
+<!-- We reference the controller here. -->
+<body data-ng-app="facilityRegistry" data-ng-controller="SearchController">
+
+	<!-- Wide container which encapsulates everything in the app. -->
+	<div class="container-fluid">
+		<h1>Facility Registry</h1>
+
+		<!-- Nest rows to let the map span multiple rows. -->
+		<div class="row">
+
+			<!-- Map -->
+			<div class="col-md-6" style="height: 60%;">
+				<iframe
+					src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d7993.3567285974905!2d10.7267485!3d59.9431068!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sen!2sno!4v1415281307905"
+					width="100%" height="85%" frameborder="0" style="border: 0">
+				</iframe>
+			</div>
+
+			<!-- Right-hand side. -->
+			<div class="col-md-6">
+				<div class="row">
+					<div class="col-md-12">Options here?</div>
+				</div>
+
+				<!-- Search-bar -->
+				<div class="row">	
+					<div class="col-md-12">
+						<input id="searchBar" type="text" class="form-control"
+							placeholder="Search for facility..."
+							data-ng-model="soek"
+                       		data-ng-change="testFunction('{{soek}}')"> 
+					
+					</div>
+				</div>
+
+				<!-- Drop-down list beneath the search bar. -->
+				<div class="row">
+					<div class="dropDownList">Her skal det droppes ting ned.</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!--  	
 	<div class="container">
 		<div class="ro"w>
 			<div class="darkBG col-sm-6 col-xs-12">Test.</div>
@@ -20,8 +75,11 @@
 			<div class="darkestBG col-sm-3 col-xs-6">Test3.</div>
 		</div>
 	</div>
+-->
 
-		<!-- Latest compiled and minified JavaScript for bootstrap -->
-		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
-	</body>
+
+	<!-- Latest compiled and minified JavaScript for bootstrap -->
+	<script
+		src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+</body>
 </html>

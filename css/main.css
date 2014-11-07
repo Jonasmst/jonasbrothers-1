@@ -1,0 +1,11 @@
+.container-fluid {
+	width: 95%;
+	height: 95%;
+}
+
+.dropDownList {
+	margin: 2% 2%;
+	height: 100%;
+	width: 95%;
+	background-color: #FFF000;
+}
