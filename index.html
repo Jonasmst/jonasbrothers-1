@@ -65,12 +65,18 @@
 					<!-- Jonas testing angular stuff -->
 					<div class="container"
 						data-ng-controller="TestController as testCtrl">
-						<div class="panel-group" ng-repeat="orgUnits in testCtrl.orgUnits">
-							<div class="panel panel-default" ng-repeat="orgUnit in orgUnits">
-								<div class="panel-heading">{{orgUnit.name}}</div>
-								<div class="panel-body">{{orgUnit.code}}</div>
+
+						<!--TEST-->
+						<div class="panel-group">
+							<div class="panel panel-default" id="unit-panel" ng-repeat="unit in testCtrl.orgUnits">
+								<div class="panel-heading">{{unit.name}}</div>
+								<div class="panel-body">
+									<p>ID: {{unit.id}}</p>
+									<p>Link: {{unit.href}}</p>
+								</div>
 							</div>
 						</div>
+						<!--ENDTEST-->
 					</div>
 				</div>
 			</div>
@@ -92,6 +98,8 @@
 
 	<!-- jQuery -->
 	<script src="js/jquery-1.11.1.min.js"></script>
+	<!-- Arrive (lib for detecting when elements are added to the DOM) -->
+	<script src="js/arrive-2.0.0.min.js"></script>
 	<!-- Latest compiled and minified JavaScript for bootstrap -->
 	<script
 		src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>

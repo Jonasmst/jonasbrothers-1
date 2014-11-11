@@ -30,6 +30,7 @@ app.controller('TestController', ['$http', function($http) {
 	var testCtrl = this;
 	testCtrl.orgUnits = [];
 	testCtrl.names = [];
+	testCtrl.allOrgUnits = [];
 
 	// URL for orgunits-API
 	var apiUrl = "http://inf5750-14.uio.no/api/organisationUnits.json?pageSize=1332";
@@ -39,8 +40,12 @@ app.controller('TestController', ['$http', function($http) {
 	var base64 = "YWRtaW46ZGlzdHJpY3Q=";
 	$http.get(apiUrl, {headers: {'Authorization': 'Basic YWRtaW46ZGlzdHJpY3Q='}}).
 		success(function(data) {
-			alert("Hello!");
-			testCtrl.orgUnits = data;
+			testCtrl.allOrgUnits = data.organisationUnits;
+			testCtrl.orgUnits = data.organisationUnits.splice(0, 10);
+			
+			// Log stuff
+			console.log(data);
+			console.log(testCtrl.orgUnits);
 		}).
 		error(function(data, status, headers, config) {
 			alert("Error. Data: " + data);
