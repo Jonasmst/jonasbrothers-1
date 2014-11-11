@@ -35,10 +35,10 @@
 		<div class="row">
 
 			<!-- Map -->
-			<div class="col-md-6" style="height: 60%;">
+			<div class="col-md-6" style="height: 60%">
 				<iframe
 					src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d7993.3567285974905!2d10.7267485!3d59.9431068!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sen!2sno!4v1415281307905"
-					width="100%" height="85%" frameborder="0" style="border: 0">
+					width="100%" height="55%" frameborder="0" style="border: 0">
 				</iframe>
 			</div>
 
@@ -63,6 +63,15 @@
 				<div class="row">
 					<div class="dropDownList">Her skal det droppes ting ned.</div>
 				</div>
+
+				<!-- Jonas testing angular stuff -->
+				<div class="container" data-ng-controller="TestController as testCtrl">
+					<div ng-repeat="name in testCtrl.names">
+						<p>{{name}}</p>
+					</div>
+
+				</div>
+				<!-- END Jonas testing angular stuff -->
 			</div>
 		</div>
 	</div>
@@ -77,7 +86,8 @@
 	</div>
 -->
 
-
+	<!-- jQuery -->
+	<script src="js/jquery-1.11.1.min.js"></script>
 	<!-- Latest compiled and minified JavaScript for bootstrap -->
 	<script
 		src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
