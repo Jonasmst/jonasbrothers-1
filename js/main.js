@@ -28,11 +28,11 @@ app.controller('SearchController', function($scope){
 
 app.controller('TestController', ['$http', function($http) {
 	var testCtrl = this;
-	testCtrl.facilities = [];
+	testCtrl.orgUnits = [];
 	testCtrl.names = [];
 
 	// URL for orgunits-API
-	var apiUrl = "http://inf5750-14.uio.no/api/organisationUnits.json";
+	var apiUrl = "http://inf5750-14.uio.no/api/organisationUnits.json?pageSize=1332";
 	//var apiUrl = "http://inf5750-14.uio.no/api/currentUser";
 
 	// Cross-site redirect error solution: Run chrome with --disable-web-security
@@ -40,7 +40,7 @@ app.controller('TestController', ['$http', function($http) {
 	$http.get(apiUrl, {headers: {'Authorization': 'Basic YWRtaW46ZGlzdHJpY3Q='}}).
 		success(function(data) {
 			alert("Hello!");
-			testCtrl.names = data;
+			testCtrl.orgUnits = data;
 		}).
 		error(function(data, status, headers, config) {
 			alert("Error. Data: " + data);

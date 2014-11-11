@@ -25,7 +25,8 @@
 </head>
 
 <!-- We reference the controller here. -->
-<body data-ng-app="facilityRegistry" data-ng-controller="SearchController">
+<body data-ng-app="facilityRegistry"
+	data-ng-controller="SearchController">
 
 	<!-- Wide container which encapsulates everything in the app. -->
 	<div class="container-fluid">
@@ -49,31 +50,34 @@
 				</div>
 
 				<!-- Search-bar -->
-				<div class="row">	
+				<div class="row">
 					<div class="col-md-12">
 						<input id="searchBar" type="text" class="form-control"
-							placeholder="Search for facility..."
-							data-ng-model="soek"
-                       		data-ng-change="testFunction('{{soek}}')"> 
-					
+							placeholder="Search for facility..." data-ng-model="soek"
+							data-ng-change="testFunction('{{soek}}')">
+
 					</div>
 				</div>
 
 				<!-- Drop-down list beneath the search bar. -->
 				<div class="row">
-					<div class="dropDownList">Her skal det droppes ting ned.</div>
-				</div>
 
-				<!-- Jonas testing angular stuff -->
-				<div class="container" data-ng-controller="TestController as testCtrl">
-					<div ng-repeat="name in testCtrl.names">
-						<p>{{name}}</p>
+					<!-- Jonas testing angular stuff -->
+					<div class="container"
+						data-ng-controller="TestController as testCtrl">
+						<div class="panel-group" ng-repeat="orgUnits in testCtrl.orgUnits">
+							<div class="panel panel-default" ng-repeat="orgUnit in orgUnits">
+								<div class="panel-heading">{{orgUnit.name}}</div>
+								<div class="panel-body">{{orgUnit.code}}</div>
+							</div>
+						</div>
 					</div>
-
 				</div>
-				<!-- END Jonas testing angular stuff -->
 			</div>
+
+			<!-- END Jonas testing angular stuff -->
 		</div>
+	</div>
 	</div>
 
 	<!--  	
