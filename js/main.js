@@ -5,7 +5,8 @@ var app = angular.module('facilityRegistry',[]);
 app.controller('SearchController', function($scope){
 
 	$scope.testFunction = function(msg) {
-		alert('Du søkte etter: ' + msg[0]);
+		
+		
 	};
 
 	// We name this controller, so that we can use it within the scope of another.

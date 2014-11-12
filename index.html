@@ -37,7 +37,7 @@
 
 			<!-- Map -->
 			<div class="col-md-6" style="height: 60%">
-				<iframe
+				<iframeID: Rp268JB6Ne4
 					src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d7993.3567285974905!2d10.7267485!3d59.9431068!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sen!2sno!4v1415281307905"
 					width="100%" height="55%" frameborder="0" style="border: 0">
 				</iframe>
@@ -68,7 +68,7 @@
 
 						<!--TEST-->
 						<div class="panel-group">
-							<div class="panel panel-default" id="unit-panel" ng-repeat="unit in testCtrl.orgUnits">
+							<div class="panel panel-default" id="unit-panel" ng-repeat="unit in testCtrl.orgUnits | filter:soek">
 								<div class="panel-heading">{{unit.name}}</div>
 								<div class="panel-body">
 									<p>ID: {{unit.id}}</p>
