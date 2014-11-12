@@ -25,8 +25,7 @@
 </head>
 
 <!-- We reference the controller here. -->
-<body data-ng-app="facilityRegistry"
-	data-ng-controller="SearchController">
+<body data-ng-app="facilityRegistry" style="background-color:">
 
 	<!-- Wide container which encapsulates everything in the app. -->
 	<div class="container-fluid">
@@ -36,40 +35,33 @@
 		<div class="row">
 
 			<!-- Map -->
-			<div class="col-md-6" style="height: 60%">
-				<iframeID: Rp268JB6Ne4
+			<div class="col-md-8" style="height: 60%">
+				<iframe ID: Rp268JB6Ne4
 					src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d7993.3567285974905!2d10.7267485!3d59.9431068!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sen!2sno!4v1415281307905"
 					width="100%" height="55%" frameborder="0" style="border: 0">
 				</iframe>
 			</div>
 
-			<!-- Right-hand side. -->
-			<div class="col-md-6">
-				<div class="row">
-					<div class="col-md-12">Options here?</div>
-				</div>
-
+			<!-- Right-hand side. Added a background so we can see the boundaries of the box. -->
+			<div class="col-md-4" style="background-color:  #f0f8ff">
+			
 				<!-- Search-bar -->
-				<div class="row">
+				<div class="row" style="margin-top: 18px; margin-bottom: 5px">
 					<div class="col-md-12">
 						<input id="searchBar" type="text" class="form-control"
-							placeholder="Search for facility..." data-ng-model="soek"
-							data-ng-change="testFunction('{{soek}}')">
+							placeholder="Search for facility..." data-ng-model="soek">
 
 					</div>
 				</div>
 
 				<!-- Drop-down list beneath the search bar. -->
 				<div class="row">
-
-					<!-- Jonas testing angular stuff -->
-					<div class="container"
+					<div class="container-fluid"
 						data-ng-controller="TestController as testCtrl">
-
-						<!--TEST-->
 						<div class="panel-group">
-							<!-- Can add more filters to make the searchtool more complex -->
-							<div class="panel panel-default" id="unit-panel" ng-repeat="unit in testCtrl.orgUnits | filter:soek">
+							<!-- Can add more filters to make the search tool more complex -->
+							<div class="panel panel-default" id="unit-panel"
+								ng-repeat="unit in testCtrl.allOrgUnits | filter:soek | limitTo:10">
 								<div class="panel-heading">{{unit.name}}</div>
 								<div class="panel-body">
 									<p>ID: {{unit.id}}</p>
@@ -77,14 +69,10 @@
 								</div>
 							</div>
 						</div>
-						<!--ENDTEST-->
 					</div>
 				</div>
 			</div>
-
-			<!-- END Jonas testing angular stuff -->
 		</div>
-	</div>
 	</div>
 
 	<!--  	
