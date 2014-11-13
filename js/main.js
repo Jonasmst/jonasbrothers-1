@@ -23,7 +23,7 @@ app.controller('TestController', ['$http', function($http) {
 		console.log(testCtrl.allOrgUnits);
 
 		// Reads all the coordinates. CURRENTLY ONLY GETS THOSE ON LEVEL 4.
-		// HARD-CODED AS FFFFFF. Creates pairs of [name, [coordinates]].
+		// HARD-CODED AS FFFFFFF. Creates pairs of [name, [coordinates]].
 		// Discuss how we implement this.
 		for (i = 0; i < testCtrl.allOrgUnits.length; i++)
 			if(testCtrl.allOrgUnits[i].coordinates != undefined && testCtrl.allOrgUnits[i].coordinates.length < 200)
