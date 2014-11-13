@@ -33,8 +33,7 @@ app.controller('TestController', ['$http', function($http) {
 		//console.log(testCtrl.geoCoords);
 		
 		// Add the coordinates to the map.
-		addMarkers(testCtrl.geoCoords);
-
+		addMarkers(testCtrl.geoCoords);		
 	}).
 	error(function(data, status, headers, config) {
 		alert("Error. Data: " + data);

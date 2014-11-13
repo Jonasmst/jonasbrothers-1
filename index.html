@@ -43,6 +43,8 @@
 
 <!-- We reference the controller here. -->
 <body data-ng-app="facilityRegistry">
+=======
+<body data-ng-app="facilityRegistry" data-ng-controller="TestController as testCtrl">
 
 	<!-- Wide container which encapsulates everything in the app. -->
 	<div class="container-fluid">
@@ -70,8 +72,7 @@
 
 				<!-- Drop-down list beneath the search bar. -->
 				<div class="row">
-					<div class="container-fluid"
-						data-ng-controller="TestController as testCtrl">
+					<div class="container-fluid">
 						<div class="panel-group">
 							<!-- Can add more filters to make the search tool more complex -->
 							<div class="panel panel-default" id="unit-panel"
