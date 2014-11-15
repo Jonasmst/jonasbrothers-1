@@ -1,6 +1,10 @@
+// TODO: Organize controller into specific functions for different requests.
+
+// API-docs: https://www.dhis2.org/doc/snapshot/en/developer/html/dhis2_developer_manual.html
+
 var app = angular.module('facilityRegistry',[]);
 
-app.controller('TestController', ['$http', function($http) {
+app.controller('TestController', ['$scope', '$http', function($scope, $http) {
 
 	var testCtrl = this;
 	testCtrl.geoCoords = [];
@@ -38,4 +42,32 @@ app.controller('TestController', ['$http', function($http) {
 	error(function(data, status, headers, config) {
 		alert("Error. Data: " + data);
 	});
+
+    // PUT-test
+    $scope.updateOrgUnit = function(orgUnitID) {
+        alert("Click, id: " + orgUnitID);
+        var results = $.grep(testCtrl.allOrgUnits, function(e) { return e.id === orgUnitID;});
+        // Given that we can guarantee that ID is in the array, and is unique. Should imp checks.
+        var unit = results[0];
+        
+        console.log(unit);
+
+        // TEST updating name.
+        unit.name += " TEST";
+
+        // TODO: Add inputs for editing specific properties, name, location, etc.
+
+        var request = $http({
+            method: "put",
+            url: "http://inf5750-14.uio.no/api/organisationUnits/" + orgUnitID,
+            data: unit,
+        });
+
+        request.success(function(data) {
+            alert("Success!");
+        }).error(function(data, status) {
+            alert("Error! " + data);
+        });
+    }
+
 }]);

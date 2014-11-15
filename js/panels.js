@@ -1,5 +1,5 @@
 
-
+// Listen to panels being added in index.html
 $(document).arrive(".panel.panel-default", function() {
 	var panel = $(this);
 	var pheading = panel.find(".panel-heading");

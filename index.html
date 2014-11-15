@@ -79,8 +79,9 @@
 								<div class="panel-heading">{{unit.name}}</div>
 								<div class="panel-body">
 									<p>ID: {{unit.id}}</p>
-									<p>Link: {{unit.href}}</p>
-								</div>
+                                    <p>Link: {{unit.href}}</p>
+                                    <button type="submit" ng-click="updateOrgUnit(unit.id);">Edit entry</button>
+                                </div>
 							</div>
 						</div>
 					</div>
