@@ -28,7 +28,7 @@ function addMarkers(coordinates) {
 	// Custom image for the markers.
 	var customImage = 'https://maps.gstatic.com/intl/en_us/mapfiles/markers2/measle_blue.png';
 
-	alert("We in business now, boys.");
+	//alert("We in business now, boys.");
 	
 	for (i = 0; i < coordinates.length; i++) { 
 		// Create and add a new marker per coordinate.

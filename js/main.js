@@ -44,30 +44,25 @@ app.controller('TestController', ['$scope', '$http', function($scope, $http) {
 	});
 
     // PUT-test
-    $scope.updateOrgUnit = function(orgUnitID) {
+    $scope.updateOrgUnit = function(unit) {
+        var orgUnitID = unit.id;
         alert("Click, id: " + orgUnitID);
-        var results = $.grep(testCtrl.allOrgUnits, function(e) { return e.id === orgUnitID;});
-        // Given that we can guarantee that ID is in the array, and is unique. Should imp checks.
-        var unit = results[0];
         
         console.log(unit);
 
-        // TEST updating name.
-        unit.name += " TEST";
-
-        // TODO: Add inputs for editing specific properties, name, location, etc.
-
+        // Setup request
         var request = $http({
             method: "put",
             url: "http://inf5750-14.uio.no/api/organisationUnits/" + orgUnitID,
             data: unit,
         });
 
+        // Perform request
         request.success(function(data) {
             alert("Success!");
         }).error(function(data, status) {
             alert("Error! " + data);
         });
-    }
+    };
 
 }]);
