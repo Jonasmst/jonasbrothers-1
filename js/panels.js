@@ -29,7 +29,6 @@ $(document).arrive(".panel.panel-default", function() {
 
 });
 
-
 /* OLD CODE
 //$(document).ready(function() {
 //$("body").on('DOMNodeInserted', function(e) {
