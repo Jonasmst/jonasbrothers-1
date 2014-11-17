@@ -2,6 +2,9 @@
 
 $(document).ready(initialize);
 	var map;
+	var blueMarker;
+	var redMarker;
+	var markers;
 
 // Initializes the map.
 function initialize() {
@@ -21,11 +24,15 @@ function addMarkers(coordinates) {
 
 	// Markers will be added dynamically.
 	var marker;
+	markers = [];
 
 	// InfoWindow to bind to the markers.
 	var infowindow = new google.maps.InfoWindow();
 	
 	// Custom image for the markers.
+	blueMarker = 'img/measle_blue.png';
+	redMarker = 'img/measle_red.png';
+	
 	var customImage = 'https://maps.gstatic.com/intl/en_us/mapfiles/markers2/measle_blue.png';
 
 	//alert("We in business now, boys.");
@@ -35,8 +42,11 @@ function addMarkers(coordinates) {
 		marker = new google.maps.Marker({
 			position: new google.maps.LatLng(coordinates[i][1][1], coordinates[i][1][0]),
 			map: map,
-			icon: customImage,
+			title: coordinates[i][0],
+			icon: blueMarker,
 		});
+		
+		markers.push(marker);
 
 		// Add a listener to each marker, so that they will display the name of the facility when clicked.
 		google.maps.event.addListener(marker, 'click', (function(marker, i) {
@@ -46,6 +56,23 @@ function addMarkers(coordinates) {
 			}
 		})(marker, i));
 	}
-
 }
+// Shows all current markers.
+function showMarkers() {
+	for(var i = 0; i < markers.length; i++) {
+		markers[i].setMap(map);
+	}
+}
+
+// Updates one or more markers on the map.
+function updateMarkers(name, level) {
+	for(var i = 0; i < markers.length; i++)
+		if(markers[i].getTitle() == name) {
+			markers[i].setIcon();
+			alert(markers[i].getTitle());
+		}
+		
+	showMarkers();
+}
+
 google.maps.event.addDomListener(window, 'load', initialize);

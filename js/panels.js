@@ -11,7 +11,7 @@ $(document).arrive(".panel.panel-default", function() {
 	// Set onClick on heading
 	pheading.click(function() {
 		// Hide body on click
-		pbody.slideToggle();
+		pbody.slideToggle();		
 	});
 
 	// Set onHover on heading

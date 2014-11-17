@@ -7,6 +7,17 @@ var app = angular.module('facilityRegistry',[]);
 app.controller('TestController', ['$scope', '$http', function($scope, $http) {
 
 	var testCtrl = this;
+
+	testCtrl.levelOptions = [{name:'National Unit', level:1}, 
+	                         {name:'Organisation Unit Group', level:2}, 
+	                         {name:'Organisation Unit', level:3}, 
+	                         {name:'Facility',level:4}];
+	
+	// Default is Facility.
+	testCtrl.currentOrgType = testCtrl.levelOptions[3];
+	// Query the user is searching for.
+	testCtrl.currentQuery = "";
+	
 	testCtrl.geoCoords = [];
 	testCtrl.allOrgUnits = [];
 
@@ -44,6 +55,24 @@ app.controller('TestController', ['$scope', '$http', function($scope, $http) {
 	error(function(data, status, headers, config) {
 		alert("Error. Data: " + data);
 	});
+	
+	// Changes the color of the markers related to the clicked orgUnit/facility.
+	$scope.updateMap = function(orgUnit) {
+		if(orgUnit.coordinates)
+			updateMarkers(orgUnit.name, orgUnit.level);
+	}
+	
+	// A custom filter for the ng-repeat.
+	$scope.customFilter = function(name) {
+		// Custom filter. Currently filtering:
+		// - By level.
+		// - Query.
+		return function(orgUnit) {
+			return (orgUnit.level == testCtrl.currentOrgType.level && 
+					orgUnit.name.toLowerCase().indexOf(testCtrl.currentQuery) != -1);
+		}
+	}
+	
 
     // PUT-test
     $scope.updateOrgUnit = function(unit) {
