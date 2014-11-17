@@ -33,6 +33,8 @@ function addMarkers(coordinates) {
 	blueMarker = 'img/measle_blue.png';
 	redMarker = 'img/measle_red.png';
 	
+	var customImage = 'https://maps.gstatic.com/intl/en_us/mapfiles/markers2/measle_blue.png';
+
 	//alert("We in business now, boys.");
 	
 	for (i = 0; i < coordinates.length; i++) { 

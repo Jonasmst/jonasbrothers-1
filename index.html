@@ -99,9 +99,21 @@
 									<div class="level" style="text-align:right">{{testCtrl.currentOrgType.name}}</div>
 								</div>
 								<div class="panel-body">
-									<p>ID: {{unit.id}}</p>
-                                    <p>Link: {{unit.href}}</p>
-                                    <button type="submit" data-ng-click="updateOrgUnit(unit.id);">Edit entry</button>
+									<!-- Update form -->
+                                    <form name="unitUpdateForm" ng-submit="updateOrgUnit(unit)">
+
+                                        <!-- Name -->
+                                        <fieldset class="form-group">
+                                            <textarea ng-model="unit.name" placeholder="Name"></textarea>
+                                        </fieldset>
+
+                                        <!-- TODO: Add more attributes -->
+
+                                        <!-- Submit button -->
+                                        <fieldset class="form-group">
+                                            <input type="submit" class="btn btn-primary pull-right" value="Save"/>
+                                        </fieldset>
+                                    </form>
                                 </div>
 							</div>
 						</div>
