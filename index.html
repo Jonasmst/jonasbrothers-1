@@ -60,27 +60,48 @@
 			<!-- Right-hand side. Added a background so we can see the boundaries of the box. -->
 			<div class="col-md-4" style="background-color: #f0f8ff">
 
-				<!-- Search-bar -->
-				<div class="row" style="margin-top: 18px; margin-bottom: 5px">
-					<div class="col-md-12">
-						<input id="searchBar" type="text" class="form-control"
-							placeholder="Search for facility..." data-ng-model="soek">
-
+				<!-- Options for search. Currently 1 useful and 2 useless menus.-->
+				<div class="row">
+					<div class="col-md-4" style="margin-top: 2%">
+						<select data-ng-model="testCtrl.currentOrgType" data-ng-options="option.name for option in testCtrl.levelOptions">
+							<option value=""> Unit Type..</option>
+						</select>
+					</div>
+					<div class="col-md-4" style="margin-top: 2%">
+						<select data-ng-model="currentOrgType" data-ng-options="option.name for option in testCtrl.levelOptions">
+							<option value=""> Value id</option>
+						</select>
+					</div>
+					<div class="col-md-4" style="margin-top: 2%">
+						<select data-ng-model="currentOrgType" data-ng-options="option.name for option in testCtrl.levelOptions">
+							<option value=""> Other filter</option>
+						</select>
 					</div>
 				</div>
 
+				<!-- Search-bar -->
+				<div class="row" style="margin-top: 2%; margin-bottom: 2%">
+					<div class="col-md-12">
+						<input id="searchBar" type="text" class="form-control"
+							placeholder="Search for {{testCtrl.currentOrgType.name}}..." data-ng-model="testCtrl.currentQuery">
+
+					</div>
+				</div>
+				
 				<!-- Drop-down list beneath the search bar. -->
 				<div class="row">
 					<div class="container-fluid">
 						<div class="panel-group">
 							<!-- Can add more filters to make the search tool more complex -->
 							<div class="panel panel-default" id="unit-panel"
-								ng-repeat="unit in testCtrl.allOrgUnits | filter:soek | limitTo:10">
-								<div class="panel-heading">{{unit.name}}</div>
+								ng-repeat="unit in testCtrl.allOrgUnits | filter:customFilter(unit) | limitTo:10">
+								<div class="panel-heading" data-ng-click="updateMap(unit)">{{unit.name}}
+									<div class="level" style="text-align:right">{{testCtrl.currentOrgType.name}}</div>
+								</div>
 								<div class="panel-body">
 									<p>ID: {{unit.id}}</p>
                                     <p>Link: {{unit.href}}</p>
-                                    <button type="submit" ng-click="updateOrgUnit(unit.id);">Edit entry</button>
+                                    <button type="submit" data-ng-click="updateOrgUnit(unit.id);">Edit entry</button>
                                 </div>
 							</div>
 						</div>
