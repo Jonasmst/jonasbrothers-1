@@ -44,6 +44,7 @@ function addMarkers(coordinates) {
 			map: map,
 			title: coordinates[i][0],
 			icon: blueMarker,
+			used: false,
 		});
 		
 		markers.push(marker);
@@ -68,11 +69,49 @@ function showMarkers() {
 function updateMarkers(name, level) {
 	for(var i = 0; i < markers.length; i++)
 		if(markers[i].getTitle() == name) {
-			markers[i].setIcon();
-			alert(markers[i].getTitle());
+			if(markers[i].used == false){ // adds the marker to the map
+				markers[i].used = true;
+				markers[i].setIcon();
+				//alert(markers[i].getTitle());
+			} else{ // Hides the marker from the map
+				markers[i].used = false;
+				markers[i].setIcon(blueMarker);
+			}
 		}
 		
 	showMarkers();
 }
+// Finds users location and the 3 nearest facilities
+/*function getClosestFacility(){
+		if (navigator.geolocation) {
+			navigator.geolocation.getCurrentPosition(location_found, error, options);
+		} else {
+			alert("Geolocation not supported:(");
+			x.innerHTML = "Geolocation is not supported by this browser.";
+		}
+	}
+}
+
+//Call this function when you've succesfully obtained the location. 
+function location_found(position) {
+	// Extract latitude and longitude and save on the server using an AJAX call. 
+	// When you've updated the location, call populateStudentTable(json); again
+	// to put the new location next to the student on the page. . 
+	var latitude = position.coords.latitude;
+	var longitude = position.coords.longitude;
+
+	$.ajax({
+		type:"GET",
+		url: "/assignment2-gui/api/student/" + studentId + "/location?latitude=" + latitude + "&longitude=" + longitude,
+	})
+	.fail(function(){
+		alert("error");
+	})
+	.done(function (json){
+		// Select three nearest facilites
+	});
+}*/
+
+
 
 google.maps.event.addDomListener(window, 'load', initialize);
