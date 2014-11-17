@@ -15,7 +15,9 @@ app.controller('TestController', ['$scope', '$http', function($scope, $http) {
 
 	// Tweaked URL to include coordinates (if applicable) for the facility.
 	// Not all facilities have coordinates. Figure out how to correctly represent those we can.
-	var apiUrl = "http://inf5750-14.uio.no/api/organisationUnits.json?fields=:identifiable,coordinates,level&pageSize=1332";
+	//var apiUrl = "http://inf5750-14.uio.no/api/organisationUnits.json?fields=:identifiable,coordinates,level&pageSize=1332";
+
+    var apiUrl = "http://inf5750-14.uio.no/api/organisationUnits.json?fields=:all,coordinates,level&pageSize=100";
 
 	// Cross-site redirect error solution: Run chrome with --disable-web-security
 	var base64 = "YWRtaW46ZGlzdHJpY3Q=";
