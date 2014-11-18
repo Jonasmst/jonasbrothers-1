@@ -56,8 +56,10 @@ app.controller('TestController', ['$scope', '$http', function($scope, $http) {
 	
 	// Changes the color of the markers related to the clicked orgUnit/facility.
 	$scope.updateMap = function(orgUnit) {
-		if(orgUnit.coordinates)
-			updateMarkers(orgUnit.name, orgUnit.level);
+		if(orgUnit.coordinates) {
+			updateMarkers(orgUnit);
+			//console.log(orgUnit);
+		}
 	}
 	
 	// A custom filter for the ng-repeat.
