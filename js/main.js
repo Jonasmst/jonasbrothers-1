@@ -75,7 +75,7 @@ app.controller('TestController', ['$scope', '$http', function($scope, $http) {
 	
 
 	$scope.getLocation = function(){
-		alert("Find location");
+		getClosestFacilitys();
 	}
 	
     // PUT-test

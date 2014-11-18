@@ -84,12 +84,12 @@ function updateMarkers(orgUnit) {
 
 		// Splits the coordinate string into neat pairs of lat/lng.
 		var coords = orgUnit.coordinates.substring(3,orgUnit.coordinates.length-4).split("],");
-		
+
 		// Path to the polygon object.
 		var orgPath = []
 
 		var lngObject = "";
-		
+
 		for(var i = 0; i < coords.length; i++) {
 			coords[i] = coords[i].split(",");
 			coords[i][0] = coords[i][0].substring(1,coords[i][0].length);
@@ -108,9 +108,8 @@ function updateMarkers(orgUnit) {
 			fillColor: '#FF0000',
 			fillOpacity: 0.25
 		})
-		
 		orgUnit.polyPath = polygon;
-		
+
 		polygon.setMap(map);
 	}	
 	/*if(orgUnit.coordinates.indexOf(markers[i].getPosition().lat()) > -1 &&
@@ -122,36 +121,30 @@ function updateMarkers(orgUnit) {
 	showMarkers();
 }
 
-// Finds users location and the 3 nearest facilities
-/*function getClosestFacility(){
-		if (navigator.geolocation) {
-			navigator.geolocation.getCurrentPosition(location_found, error, options);
-		} else {
-			alert("Geolocation not supported:(");
-			x.innerHTML = "Geolocation is not supported by this browser.";
+function contains(poly, unit){
+	for(var i = 0; i < poly.length; i++){
+		if(poly[i] === unit){
+			return true;
 		}
+	}
+	return true;
+}
+//Finds users location and the 3 nearest facilities
+function getClosestFacilitys(){
+	if (navigator.geolocation) {
+		navigator.geolocation.getCurrentPosition(location_found);
+	} else {
+		alert("Geolocation not supported:(");
+		x.innerHTML = "Geolocation is not supported by this browser.";
 	}
 }
 
 //Call this function when you've succesfully obtained the location. 
 function location_found(position) {
-	// Extract latitude and longitude and save on the server using an AJAX call. 
-	// When you've updated the location, call populateStudentTable(json); again
-	// to put the new location next to the student on the page. . 
 	var latitude = position.coords.latitude;
 	var longitude = position.coords.longitude;
-
-	$.ajax({
-		type:"GET",
-		url: "/assignment2-gui/api/student/" + studentId + "/location?latitude=" + latitude + "&longitude=" + longitude,
-	})
-	.fail(function(){
-		alert("error");
-	})
-	.done(function (json){
-		// Select three nearest facilites
-	});
-}*/
+	alert("latitude: " + latitude + "\nlongitude: " + longitude);
+}
 
 
 
