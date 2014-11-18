@@ -65,18 +65,6 @@ function showMarkers() {
 	}
 }
 
-// Updates one or more markers on the map.
-function updateMarkers(name, level) {
-	for(var i = 0; i < markers.length; i++)
-		if(markers[i].getTitle() == name) {
-			if(markers[i].used == false){ // adds the marker to the map
-				markers[i].used = true;
-				markers[i].setIcon();
-				//alert(markers[i].getTitle());
-			} else{ // Hides the marker from the map
-				markers[i].used = false;
-				markers[i].setIcon(blueMarker);
-			}
 //Updates one or more markers on the map.
 function updateMarkers(orgUnit) {
 
@@ -84,7 +72,13 @@ function updateMarkers(orgUnit) {
 	if(orgUnit.level == 4) {
 		for(var i = 0; i < markers.length; i++) {
 			if(markers[i].getTitle() == orgUnit.name)
-				markers[i].setIcon();	
+				if(markers[i].used == false){
+					markers[i].setIcon();
+					markers[i].used = true;
+				} else {
+					markers[i].setIcon(blueMarker);
+					markers[i].used = false;
+				}
 		}
 	} else if(orgUnit.level == 3 || orgUnit.level == 2) {
 
@@ -127,6 +121,7 @@ function updateMarkers(orgUnit) {
 
 	showMarkers();
 }
+
 // Finds users location and the 3 nearest facilities
 /*function getClosestFacility(){
 		if (navigator.geolocation) {
