@@ -141,9 +141,31 @@ function getClosestFacilitys(){
 
 //Call this function when you've succesfully obtained the location. 
 function location_found(position) {
-	var latitude = position.coords.latitude;
-	var longitude = position.coords.longitude;
-	alert("latitude: " + latitude + "\nlongitude: " + longitude);
+	//var latitude = position.coords.latitude;
+	//var longitude = position.coords.longitude;
+	
+	//Using fix coordinates to make it more realistisc
+	var latitude = 8.269720;
+	var longitude = -12.483215;
+	
+	
+	marker = new google.maps.Marker({
+		position: new google.maps.LatLng(latitude, longitude),
+		map: map,
+		title: "My location",
+		icon: blueMarker,
+		used: false,
+	});
+	markers.push(marker);
+	
+	if(marker.used == false){
+		marker.setIcon();
+		marker.used = true;
+	} else {
+		marker.setIcon(blueMarker);
+		marker.used = false;
+	}
+	alert("latitude: " + latitude + "\nlongitude: " + longitude + "\nFixed coordinates");
 }
 
 
