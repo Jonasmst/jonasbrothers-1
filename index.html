@@ -77,6 +77,9 @@
 							<option value=""> Other filter</option>
 						</select>
 					</div>
+					<div class="col-md-4" style="margin-top: 2%" data-ng-click="getLocation()">
+						<input type="submit" class="btn btn-primary pull-right" value="Find me"/>
+					</div>
 				</div>
 
 				<!-- Search-bar -->
@@ -86,7 +89,7 @@
 							placeholder="Search for {{testCtrl.currentOrgType.name}}..." data-ng-model="testCtrl.currentQuery">
 
 					</div>
-				</div>
+				</div> 
 				
 				<!-- Drop-down list beneath the search bar. -->
 				<div class="row">
