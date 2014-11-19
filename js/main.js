@@ -1,5 +1,4 @@
 // TODO: Organize controller into specific functions for different requests.
-
 // API-docs: https://www.dhis2.org/doc/snapshot/en/developer/html/dhis2_developer_manual.html
 
 var app = angular.module('facilityRegistry',[]);
@@ -75,31 +74,70 @@ app.controller('TestController', ['$scope', '$http', function($scope, $http) {
 		}
 	}
 	
-
+    // TODO: Author, comment where getClosestFacilities() is, what it does and where/when it's called.
 	$scope.getLocation = function(){
 		getClosestFacilitys();
 	}
 	
-    // PUT-test
+    /**
+    * Updates an orgunit. Called from save-button in template. 
+    * @param unit JSONObject of orgunit, modified in template.
+    */
     $scope.updateOrgUnit = function(unit) {
-        var orgUnitID = unit.id;
-        alert("Click, id: " + orgUnitID);
-        
-        console.log(unit);
+
+        var apiUrl = "http://inf5750-14.uio.no/api/organisationUnits/";
 
         // Setup request
         var request = $http({
             method: "put",
-            url: "http://inf5750-14.uio.no/api/organisationUnits/" + orgUnitID,
+            url: apiUrl + orgUnitID,
             data: unit,
         });
 
         // Perform request
         request.success(function(data) {
+            // TODO: Some kind of feedback? Angular automatically updates template.
             alert("Success!");
         }).error(function(data, status) {
-            alert("Error! " + data);
+            alert("Error updating orgunit. Data: " + data);
         });
+    };
+
+    /**
+    * Creates an orgunit and uploads it to the server.
+    * @params unit JSONObject representation of the orgunit.
+    */
+    $scope.createOrgUnit = function(unit) {
+        // TODO: Validate forms in template: Blank should not be allowed, fuzzes stuff up.
+
+        var apiUrl = "http://inf5750-14.uio.no/api/organisationUnits/";
+        
+        // Updating save-button appearance for feedback
+        $scope.unitAdded = true;
+
+        alert("Creating unit: " + unit.name);
+
+
+        // Setup request
+        var request = $http( {
+            method: "post",
+            url: apiUrl,
+            data: unit,
+        });
+
+        // Perform request
+        request.success(function(data) {
+            // Disable loading animation
+            $scope.unitAdded = false;
+            alert("Success!");
+
+        }).error(function(data, status) {
+            // Disable loading-animation
+            $scope.unitAdded = false;
+            alert("Error :(");
+            console.log("Create unit error:\n" + data);
+        });
+
     };
 
 }]);

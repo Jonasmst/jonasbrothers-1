@@ -19,6 +19,7 @@
 	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
 <!-- Script for panels ui -->
 <script src="js/panels.js"></script>
+<script src="js/ui.js"></script>
 <!-- Google Maps - Own API key used. Remove later. -->
 <script type="text/javascript"
 	src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBCOMUA-V2O418d4UzRqM2sSYW2jUuhhX4"></script>
@@ -63,24 +64,74 @@
 				<!-- Options for search. Currently 1 useful and 2 useless menus.-->
 				<div class="row">
 					<div class="col-md-4" style="margin-top: 2%">
-						<select data-ng-model="testCtrl.currentOrgType" data-ng-options="option.name for option in testCtrl.levelOptions">
+						<select class="form-control" data-ng-model="testCtrl.currentOrgType" data-ng-options="option.name for option in testCtrl.levelOptions">
 							<option value=""> Unit Type..</option>
 						</select>
 					</div>
 					<div class="col-md-4" style="margin-top: 2%">
-						<select data-ng-model="currentOrgType" data-ng-options="option.name for option in testCtrl.levelOptions">
+						<select class="form-control" data-ng-model="currentOrgType" data-ng-options="option.name for option in testCtrl.levelOptions">
 							<option value=""> Value id</option>
 						</select>
 					</div>
 					<div class="col-md-4" style="margin-top: 2%">
-						<select data-ng-model="currentOrgType" data-ng-options="option.name for option in testCtrl.levelOptions">
+						<select class="form-control" data-ng-model="currentOrgType" data-ng-options="option.name for option in testCtrl.levelOptions">
 							<option value=""> Other filter</option>
 						</select>
 					</div>
-					<div class="col-md-4" style="margin-top: 2%" data-ng-click="getLocation()">
-						<input type="submit" class="btn btn-primary pull-right" value="Find me"/>
-					</div>
-				</div>
+				</div> <!-- End options row -->
+
+                <!-- Row for buttons -->
+                <div class="row">
+                    <div class="col-md-12" style="margin-top: 2%">
+                        <!-- Find me button -->
+                        <button type="button" class="btn btn-default btn-md" ng-click="getLocation()">
+                            <span class="glyphicon glyphicon-map-marker" aria-hidden="true"></span>
+                            Find me
+                        </button>
+
+                        <!-- Create unit button -->
+                        <button type="button" class="btn btn-default btn-md" id="add-new-btn">
+                            <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                            Add new
+                        </button>
+                    </div>
+                </div> <!-- End button row -->
+
+                <!-- Row for new unit container, hidden by default -->
+                <div class="row" id="create-unit-row">
+                    <!-- Create unit container. Hidden by default, revealed when used -->
+                    <div class="col-md-12" id="create-unit-container">
+                        <!-- Form for inputting orgunit variables -->
+                        <form name="createUnitForm" ng-submit="createOrgUnit(unit)">
+                            <h3>Create new organisation unit</h3>
+                            <fieldset class="form-group">
+                                <!-- Name -->
+                                <label for="unit-name">Name:</label>
+                                <input type="text" class="form-control" ng-model="unit.name"/>
+
+                                <!-- Short name -->
+                                <label for="unit-shortname">Short name:</label>
+                                <input type="text" class="form-control" ng-model="unit.shortName"/>
+                            
+                                <!-- TODO: More fields -->
+
+                                <!-- Buttons -->
+                                <div class="pull-right" style="margin-top:10px;">
+                                    <!-- Cancel -->
+                                    <button type="button" class="btn btn-default btn-md" id="create-unit-cancel-btn" style="margin-right:10px;">
+                                        Cancel
+                                    </button>
+                                    <!-- Save -->
+                                    <button type="submit" class="btn btn-primary btn-md" id="create-unit-save-btn" style="margin-right:10px;">
+                                        <span ng-show="unitAdded" class="glyphicon glyphicon-refresh create-unit-animate"></span>
+                                        Save
+                                    </button>
+                                </div>
+
+                            </fieldset>
+                        </form> 
+                    </div>
+                </div> <!-- End new unit container row -->
 
 				<!-- Search-bar -->
 				<div class="row" style="margin-top: 2%; margin-bottom: 2%">
