@@ -61,19 +61,34 @@
 			<!-- Right-hand side. Added a background so we can see the boundaries of the box. -->
 			<div class="col-md-4" style="background-color: #f0f8ff">
 
-				<!-- Options for search. Currently 1 useful and 2 useless menus.-->
+				<!-- Options for search. Currently 2 useful and 1 useless menus.-->
 				<div class="row">
-					<div class="col-md-4" style="margin-top: 2%">
+                    
+                    <!-- Facility -->
+                    <div class="col-md-3" style="margin-top: 2%">
 						<select class="form-control" data-ng-model="testCtrl.currentOrgType" data-ng-options="option.name for option in testCtrl.levelOptions">
 							<option value=""> Unit Type..</option>
 						</select>
 					</div>
-					<div class="col-md-4" style="margin-top: 2%">
-						<select class="form-control" data-ng-model="currentOrgType" data-ng-options="option.name for option in testCtrl.levelOptions">
+					
+					<!-- Value ID -->
+                    <div class="col-md-3" style="margin-top: 2%">
+                        <select class="form-control" data-ng-model="currentOrgType" data-ng-options="option.name for option in testCtrl.levelOptions">
 							<option value=""> Value id</option>
+						<select data-ng-model="testCtrl.currentOrgType" data-ng-options="option.name for option in testCtrl.levelOptions">
+							<option value=""></option>
 						</select>
 					</div>
-					<div class="col-md-4" style="margin-top: 2%">
+
+                    <!-- Show borders -->
+					<div class="col-md-3" style="margin-top: 2%">
+						<select class="form-control" data-ng-model="testCtrl.showBorders" data-ng-options="option.name for option in testCtrl.borderOptions">
+							<option value=""> Show Borders..</option>
+						</select>
+					</div>
+
+                    <!-- Other filter -->
+					<div class="col-md-3" style="margin-top: 2%">
 						<select class="form-control" data-ng-model="currentOrgType" data-ng-options="option.name for option in testCtrl.levelOptions">
 							<option value=""> Other filter</option>
 						</select>
