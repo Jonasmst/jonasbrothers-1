@@ -1,6 +1,44 @@
 // TODO: Organize controller into specific functions for different requests.
-// API-docs: https://www.dhis2.org/doc/snapshot/en/developer/html/dhis2_developer_manual.html
-//TODO: Organize controller into specific functions for different requests.
+// CONSIDER: Present border options as checkboxes instead of select?
+/* TODO: Figure out levels / what we're supposed to do. 
+    Currently, we're presenting every level of units (1-4). Given the 
+    name Facility registry, are we supposed to deal only with facilities (level 4)?
+
+    Also, we're listing the levels like this:
+    Level 1: National Unit
+    Level 2: Organisation Unit Group
+    Level 3: Organisation Unit
+    Level 4: Facility
+
+    The server list's the hierarchy like this (under Organisation Unit Level):
+    Level 1: National
+    Level 2: District
+    Level 3: Chiefdom
+    Level 4: Facility
+
+*/
+/* TODO: Have we understood the hierarchy correctly? Observations:
+    When selecting Organisation Unit Group in our solution, we present what the server
+    presents as Organisation Units. I believe unit groups are more like categories,
+    e.g. clinic, hospital. Check link.
+    (LINK: http://inf5750-14.uio.no/dhis-web-maintenance-organisationunit/organisationUnit.action)
+
+    I think we may have gotten organisation units right. A search for Badjia, 
+    and orgunit according to our imp, the server displays the following hierarchy:
+    Badjia - Bo - Sierra Leone. So I'm guessing Bo is a city, while
+    Badjia is an orgUnit in the city of Bo, in the country Sierra Leone. Not sure, though,
+    but we should make sure we understand this correctly before proceeding.
+
+    Our orgunit group == district or city or something of less resolution.
+
+    I think we've gotten facilities right aswell. Server displays following hierarchy:
+    Adonkia CHP - Nieni - Koinadugu - Sierra Leone.
+
+    I haven't figured out what National Units are, or whether they're relvant or not.
+
+    To conclude, I'm pretty sure we've got orgunit-groups/districts mixed up.
+
+*/
 
 //API-docs: https://www.dhis2.org/doc/snapshot/en/developer/html/dhis2_developer_manual.html
 
@@ -91,7 +129,8 @@ app.controller('TestController', ['$scope', '$http', function($scope, $http) {
 	}
 	
     // TODO: Author, comment where getClosestFacilities() is, what it does and where/when it's called.
-	$scope.getLocation = function(){
+	//       Also, this doesn't do anything other than finding browser location.
+    $scope.getLocation = function(){
 		getClosestFacilitys();
 	}
 	
@@ -152,6 +191,7 @@ app.controller('TestController', ['$scope', '$http', function($scope, $http) {
 
     /**
     * Creates an orgunit and uploads it to the server.
+    * NOTE: IDs, createdAt, lastUpdated and href seem to be added by server; no need to specify.
     * @params unit JSONObject representation of the orgunit.
     */
     $scope.createOrgUnit = function(unit) {
