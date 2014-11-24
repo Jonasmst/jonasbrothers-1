@@ -124,7 +124,15 @@ app.controller('TestController', ['$scope', '$http', function($scope, $http) {
 		// - Query.
 		return function(orgUnit) {
 			return (orgUnit.level == testCtrl.currentOrgType.level && 
-					orgUnit.name.toLowerCase().indexOf(testCtrl.currentQuery) != -1);
+					orgUnit.name.toLowerCase().indexOf(testCtrl.currentQuery.toLowerCase()) != -1);
+		}
+	}
+	
+	// Filters the options when adding a new orgunit/facility.
+	$scope.optionFilter = function(level) {
+		
+		return function(option) {
+			return (option.level == 3 || option.level == 4)
 		}
 	}
 	
@@ -203,7 +211,8 @@ app.controller('TestController', ['$scope', '$http', function($scope, $http) {
         $scope.unitAdded = true;
 
         alert("Creating unit: " + unit.name);
-
+        alert("Level: " + unit.level);
+        alert("Parent: " + unit.parent.name);
 
         // Setup request
         var request = $http( {
@@ -226,5 +235,17 @@ app.controller('TestController', ['$scope', '$http', function($scope, $http) {
         });
 
     };
-
 }]);
+
+// Directive that allows us to dynamically change the input url.
+app.directive('createOrgUnitForm', function() {	
+	return {
+		link: function(scope, element, attrs) {
+	           scope.getPageUrl = function() {
+	                return 'form-template-' + attrs.orgtype + '.html';
+	           }
+	       },
+		template: '<div ng-include="getPageUrl()"></div>',
+	};
+});
+

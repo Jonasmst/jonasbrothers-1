@@ -1,0 +1,36 @@
+<fieldset class="form-group" id="orgunit">
+
+	<!-- Dropdown for parent unit -->
+	<label for="unit-name">Parent</label> <select class="form-control"
+		data-ng-model="unit.parent"
+		data-ng-options="orgunit.name for orgunit in testCtrl.allOrgUnits | filter: {level:2}">
+		<option value="">Parent Unit</option>
+	</select>
+
+	<!-- Name -->
+	<label for="unit-name">Name</label> <input type="text"
+		class="form-control" ng-model="unit.name" />
+
+	<!-- Short name -->
+	<label for="unit-shortname">Short name</label> <input type="text"
+		class="form-control" ng-model="unit.shortName" />
+
+	<!-- Hardcodes the level of the unit to be saved. -->
+	<input type="text" ng-init="unit.level=3" ng-model="unit.level" style="display:none">
+	<!-- TODO: More fields -->
+
+	<!-- Buttons -->
+	<div class="pull-right" style="margin-top: 10px;">
+		<!-- Cancel -->
+		<button type="button" class="btn btn-default btn-md"
+			id="create-unit-cancel-btn" style="margin-right: 10px;">
+			Cancel</button>
+		<!-- Save -->
+		<button type="submit" class="btn btn-primary btn-md"
+			id="create-unit-save-btn" style="margin-right: 10px;">
+			<span ng-show="unitAdded"
+				class="glyphicon glyphicon-refresh create-unit-animate"></span> Save
+		</button>
+	</div>
+</fieldset>
+

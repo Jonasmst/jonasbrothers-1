@@ -45,7 +45,7 @@
 <!-- We reference the controller here. -->
 <body data-ng-app="facilityRegistry"
 	data-ng-controller="TestController as testCtrl">
-	
+
 	<!-- Wide container which encapsulates everything in the app. -->
 	<div class="container-fluid">
 		<h1>Facility Registry</h1>
@@ -61,102 +61,78 @@
 			<!-- Right-hand side. Added a background so we can see the boundaries of the box. -->
 			<div class="col-md-4" style="background-color: #f0f8ff">
 
-				<!-- Options for search. Currently 2 useful and 1 useless menus.-->
+				<!-- Options for search. Currently 2 useful menus and 2 useful buttons.-->
 				<div class="row">
-                    
-                    <!-- Facility -->
-                    <div class="col-md-3" style="margin-top: 2%">
-						<select class="form-control" data-ng-model="testCtrl.currentOrgType" data-ng-options="option.name for option in testCtrl.levelOptions">
-							<option value=""> Unit Type..</option>
-						</select>
-					</div>
-					
-					<!-- Value ID -->
-                    <div class="col-md-3" style="margin-top: 2%">
-                        <select class="form-control" data-ng-model="currentOrgType" data-ng-options="option.name for option in testCtrl.levelOptions">
-							<option value=""> Value id</option>
-						<select data-ng-model="testCtrl.currentOrgType" data-ng-options="option.name for option in testCtrl.levelOptions">
-							<option value=""></option>
-						</select>
-					</div>
 
-                    <!-- Show borders -->
 					<div class="col-md-3" style="margin-top: 2%">
-						<select class="form-control" data-ng-model="testCtrl.showBorders" data-ng-options="option.name for option in testCtrl.borderOptions">
-							<option value=""> Show Borders..</option>
-						</select>
+						<!-- Find me button -->
+						<button type="button" class="btn btn-default btn-md"
+							ng-click="getLocation()">
+							<span class="glyphicon glyphicon-map-marker" aria-hidden="true"></span>
+							Find me
+						</button>
 					</div>
-
-                    <!-- Other filter -->
 					<div class="col-md-3" style="margin-top: 2%">
-						<select class="form-control" data-ng-model="currentOrgType" data-ng-options="option.name for option in testCtrl.levelOptions">
-							<option value=""> Other filter</option>
+						<!-- Create unit button -->
+						<button type="button" class="btn btn-default btn-md"
+							id="add-new-btn">
+							<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+							Add new
+						</button>
+					</div>
+					<!-- Type to search for -->
+					<div class="col-md-3" style="margin-top: 2%">
+						<select class="form-control"
+							data-ng-model="testCtrl.currentOrgType"
+							data-ng-options="option.name for option in testCtrl.levelOptions">
+							<option value="">Unit Type..</option>
 						</select>
 					</div>
-				</div> <!-- End options row -->
+					<!-- Show borders -->
+					<div class="col-md-3" style="margin-top: 2%">
+						<select class="form-control" data-ng-model="testCtrl.showBorders"
+							data-ng-options="option.name for option in testCtrl.borderOptions">
+							<option value="">Show Borders..</option>
+						</select>
+					</div>
+				</div>
+				<!-- End options row -->
 
-                <!-- Row for buttons -->
-                <div class="row">
-                    <div class="col-md-12" style="margin-top: 2%">
-                        <!-- Find me button -->
-                        <button type="button" class="btn btn-default btn-md" ng-click="getLocation()">
-                            <span class="glyphicon glyphicon-map-marker" aria-hidden="true"></span>
-                            Find me
-                        </button>
+				<!-- Row for new unit container, hidden by default -->
+				<div class="row" id="create-unit-row">
+					<!-- Create unit container. Hidden by default, revealed when used -->
+					<div class="col-md-12" id="create-unit-container">
+						<!-- Form for inputting orgunit variables -->
+						<form name="createUnitForm" ng-submit="createOrgUnit(unit)">
+							<h3>Create new Facility/Organisation Unit</h3>
 
-                        <!-- Create unit button -->
-                        <button type="button" class="btn btn-default btn-md" id="add-new-btn">
-                            <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-                            Add new
-                        </button>
-                    </div>
-                </div> <!-- End button row -->
+							<div class="col-md-12" style="margin-top: 2%">
+								<label for="unit-name">Type</label>
+								<select class="form-control" data-ng-model="unit.type"
+									data-ng-options="option.name for option in testCtrl.levelOptions | filter:optionFilter(option)">
+									<option value="">Unit Type..</option>
+								</select>
+							</div>
 
-                <!-- Row for new unit container, hidden by default -->
-                <div class="row" id="create-unit-row">
-                    <!-- Create unit container. Hidden by default, revealed when used -->
-                    <div class="col-md-12" id="create-unit-container">
-                        <!-- Form for inputting orgunit variables -->
-                        <form name="createUnitForm" ng-submit="createOrgUnit(unit)">
-                            <h3>Create new organisation unit</h3>
-                            <fieldset class="form-group">
-                                <!-- Name -->
-                                <label for="unit-name">Name:</label>
-                                <input type="text" class="form-control" ng-model="unit.name"/>
-
-                                <!-- Short name -->
-                                <label for="unit-shortname">Short name:</label>
-                                <input type="text" class="form-control" ng-model="unit.shortName"/>
-                            
-                                <!-- TODO: More fields -->
-
-                                <!-- Buttons -->
-                                <div class="pull-right" style="margin-top:10px;">
-                                    <!-- Cancel -->
-                                    <button type="button" class="btn btn-default btn-md" id="create-unit-cancel-btn" style="margin-right:10px;">
-                                        Cancel
-                                    </button>
-                                    <!-- Save -->
-                                    <button type="submit" class="btn btn-primary btn-md" id="create-unit-save-btn" style="margin-right:10px;">
-                                        <span ng-show="unitAdded" class="glyphicon glyphicon-refresh create-unit-animate"></span>
-                                        Save
-                                    </button>
-                                </div>
-
-                            </fieldset>
-                        </form> 
-                    </div>
-                </div> <!-- End new unit container row -->
+							<!-- Submitting form. Which form shown depends on the type chosen above. -->
+							<div class="col-md-12" style="margin-top: 2%">
+								<div create-org-unit-form orgtype="{{unit.type.level}}"></div>
+							</div>
+						</form>
+					</div>
+				</div>
+				<!-- End new unit container row -->
 
 				<!-- Search-bar -->
 				<div class="row" style="margin-top: 2%; margin-bottom: 2%">
 					<div class="col-md-12">
 						<input id="searchBar" type="text" class="form-control"
-							placeholder="Search for {{testCtrl.currentOrgType.name}}..." data-ng-model="testCtrl.currentQuery">
+							placeholder="Search for {{testCtrl.currentOrgType.name}}..."
+							data-ng-model="testCtrl.currentQuery">
 
 					</div>
-				</div> 
-				
+				</div>
+
 				<!-- Drop-down list beneath the search bar. -->
 				<div class="row">
 					<div class="container-fluid">
@@ -164,26 +140,28 @@
 							<!-- Can add more filters to make the search tool more complex -->
 							<div class="panel panel-default" id="unit-panel"
 								ng-repeat="unit in testCtrl.allOrgUnits | filter:customFilter(unit) | limitTo:10">
-								<div class="panel-heading" data-ng-click="updateMap(unit)">{{unit.name}}
-									<div class="level" style="text-align:right">{{testCtrl.currentOrgType.name}}</div>
+								<div class="panel-heading" data-ng-click="updateMap(unit)">
+									{{unit.name}}
+									<div class="level" style="text-align: right">{{testCtrl.currentOrgType.name}}</div>
 								</div>
 								<div class="panel-body">
 									<!-- Update form -->
-                                    <form name="unitUpdateForm" ng-submit="updateOrgUnit(unit)">
+									<form name="unitUpdateForm" ng-submit="updateOrgUnit(unit)">
 
-                                        <!-- Name -->
-                                        <fieldset class="form-group">
-                                            <textarea ng-model="unit.name" placeholder="Name"></textarea>
-                                        </fieldset>
+										<!-- Name -->
+										<fieldset class="form-group">
+											<textarea ng-model="unit.name" placeholder="Name"></textarea>
+										</fieldset>
 
-                                        <!-- TODO: Add more attributes -->
+										<!-- TODO: Add more attributes -->
 
-                                        <!-- Submit button -->
-                                        <fieldset class="form-group">
-                                            <input type="submit" class="btn btn-primary pull-right" value="Save"/>
-                                        </fieldset>
-                                    </form>
-                                </div>
+										<!-- Submit button -->
+										<fieldset class="form-group">
+											<input type="submit" class="btn btn-primary pull-right"
+												value="Save" />
+										</fieldset>
+									</form>
+								</div>
 							</div>
 						</div>
 					</div>
