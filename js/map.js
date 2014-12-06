@@ -171,45 +171,22 @@ function contains(poly, unit){
 	}
 	return true;
 }
-//Finds users location and the 3 nearest facilities
-function getClosestFacilitys(){
-	if (navigator.geolocation) {
-		navigator.geolocation.getCurrentPosition(location_found);
-	} else {
-		alert("Geolocation not supported:(");
-		x.innerHTML = "Geolocation is not supported by this browser.";
-	}
+
+
+//Sets 'my location'. 
+function set_location(myPosition) {
+	alert("SET " + myPosition.title);
+	myPosition.setIcon();
+	markers.push(myPosition);
+	showMarkers();
 }
 
-//Call this function when you've succesfully obtained the location. 
-function location_found(position) {
-	//var latitude = position.coords.latitude;
-	//var longitude = position.coords.longitude;
-
-	//Using fix coordinates to make it more realistisc
-	var latitude = 8.269720;
-	var longitude = -12.483215;
-
-
-	marker = new google.maps.Marker({
-		position: new google.maps.LatLng(latitude, longitude),
-		map: map,
-		title: "My location",
-		icon: blueMarker,
-		used: false,
-	});
-	markers.push(marker);
-
-	if(marker.used == false){
-		marker.setIcon();
-		marker.used = true;
-	} else {
-		marker.setIcon(blueMarker);
-		marker.used = false;
-	}
-	alert("latitude: " + latitude + "\nlongitude: " + longitude + "\nFixed coordinates");
+// removes marker
+function remove_location(myPosition){
+	alert("Remove " + myPosition.title);
+	markers.splice(myPosition);
+	showMarkers();
 }
-
 
 
 google.maps.event.addDomListener(window, 'load', initialize);
