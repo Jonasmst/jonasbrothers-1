@@ -45,7 +45,7 @@ function addMarkers(coordinates) {
 			map: map,
 			title: coordinates[i][0],
 			icon: blueMarker,
-			used: false,
+			current: false,
 		});
 
 		markers.push(marker);
@@ -59,29 +59,22 @@ function addMarkers(coordinates) {
 		})(marker, i));
 	}
 }
-//Shows all current markers.
-function showMarkers() {
+
+// Updates the marker of a single facility.
+function updateMarker(orgUnit) {
 	for(var i = 0; i < markers.length; i++) {
-		markers[i].setMap(map);
-	}
-}
-
-//Updates one or more markers on the map.
-function updateMarkers(orgUnit) {
-
-	//alert(orgUnit.coordinates[0]);
-	if(orgUnit.level == 4) {
-		for(var i = 0; i < markers.length; i++) {
-			if(markers[i].getTitle() == orgUnit.name)
-				if(markers[i].used == false){
-					markers[i].setIcon();
-					markers[i].used = true;
-				} else {
-					markers[i].setIcon(blueMarker);
-					markers[i].used = false;
-				}
+		if(markers[i].getTitle() == orgUnit.name) {
+			if(markers[i].current == false){
+				markers[i].setIcon();
+				markers[i].setMap(map);
+				markers[i].current = true;
+			} else {
+				markers[i].setIcon(blueMarker);
+				markers[i].setMap(map);
+				markers[i].current = false;
+			}
+			break;
 		}
-		showMarkers();
 	}
 }
 
@@ -171,45 +164,22 @@ function contains(poly, unit){
 	}
 	return true;
 }
-//Finds users location and the 3 nearest facilities
-function getClosestFacilitys(){
-	if (navigator.geolocation) {
-		navigator.geolocation.getCurrentPosition(location_found);
-	} else {
-		alert("Geolocation not supported:(");
-		x.innerHTML = "Geolocation is not supported by this browser.";
-	}
+
+
+//Sets 'my location'. 
+function set_location(myPosition) {
+	alert("SET " + myPosition.title);
+	myPosition.setIcon();
+	markers.push(myPosition);
+	showMarkers();
 }
 
-//Call this function when you've succesfully obtained the location. 
-function location_found(position) {
-	//var latitude = position.coords.latitude;
-	//var longitude = position.coords.longitude;
-
-	//Using fix coordinates to make it more realistisc
-	var latitude = 8.269720;
-	var longitude = -12.483215;
-
-
-	marker = new google.maps.Marker({
-		position: new google.maps.LatLng(latitude, longitude),
-		map: map,
-		title: "My location",
-		icon: blueMarker,
-		used: false,
-	});
-	markers.push(marker);
-
-	if(marker.used == false){
-		marker.setIcon();
-		marker.used = true;
-	} else {
-		marker.setIcon(blueMarker);
-		marker.used = false;
-	}
-	alert("latitude: " + latitude + "\nlongitude: " + longitude + "\nFixed coordinates");
+// removes marker
+function remove_location(myPosition){
+	alert("Remove " + myPosition.title);
+	markers.splice(myPosition);
+	showMarkers();
 }
-
 
 
 google.maps.event.addDomListener(window, 'load', initialize);
