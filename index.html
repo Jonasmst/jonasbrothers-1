@@ -12,6 +12,7 @@
 
 <!-- jQuery -->
 <script src="js/jquery-1.11.1.min.js"></script>
+<script src="js/jquery-ui.js"></script>
 <!-- Arrive (lib for detecting when elements are added to the DOM) -->
 <script src="js/arrive-2.0.0.min.js"></script>
 <!-- Latest compiled and minified JavaScript for bootstrap -->
@@ -80,7 +81,7 @@
 							Add new
 						</button>
 					</div>
-					<!-- Type to search for -->
+					<!-- (Selects) Type to search for -->
 					<div class="col-md-3" style="margin-top: 2%">
 						<select class="form-control"
 							data-ng-model="testCtrl.currentOrgType"
@@ -148,12 +149,17 @@
 									<!-- Update form -->
 									<form name="unitUpdateForm" ng-submit="updateOrgUnit(unit)">
 
-										<!-- Name -->
 										<fieldset class="form-group">
-											<textarea ng-model="unit.name" placeholder="Name"></textarea>
+											<!-- Name -->
+											<label for="unit-name">Name</label>
+											<input ng-model="unit.name" placeholder="Name" class="form-control" />
+										
+											<!-- TODO: Add more attributes -->
+											<label for="unit-shortname">Short name</label>
+											<input ng-model="unit.shortName" placeholder="Short name" class="form-control" />
 										</fieldset>
 
-										<!-- TODO: Add more attributes -->
+
 
 										<!-- Submit button -->
 										<fieldset class="form-group">
@@ -169,5 +175,6 @@
 			</div>
 		</div>
 	</div>
+
 </body>
 </html>

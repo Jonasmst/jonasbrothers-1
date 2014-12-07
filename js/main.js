@@ -40,6 +40,13 @@
 
 */
 
+/* TODO: Fix: Units that are updated do not appear in the list after refreshing page.
+         It seems to be something with the customFilter. If you remove the custom filtering
+         from the ng-repeat, the updated units show up. Also, they show up under "national unit"
+         but not under "facility".
+         Levels change from 4 to 1 when updating, for some reason.
+*/
+
 //API-docs: https://www.dhis2.org/doc/snapshot/en/developer/html/dhis2_developer_manual.html
 
 var app = angular.module('facilityRegistry',[]);
@@ -84,7 +91,7 @@ app.controller('TestController', ['$scope', '$http', function($scope, $http) {
 		testCtrl.allOrgUnits = data.organisationUnits;
 
 		// Log all the info
-		console.log(testCtrl.allOrgUnits);
+		//console.log(testCtrl.allOrgUnits);
 
 		// Reads all the coordinates.
 		for (i = 0; i < testCtrl.allOrgUnits.length; i++)
@@ -150,10 +157,13 @@ app.controller('TestController', ['$scope', '$http', function($scope, $http) {
 
         var apiUrl = "http://inf5750-14.uio.no/api/organisationUnits/";
 
+        console.log(unit);
+
+        /*
         // Setup request
         var request = $http({
             method: "put",
-            url: apiUrl + orgUnitID,
+            url: apiUrl + unit.id,
             data: unit,
         });
 
@@ -164,6 +174,7 @@ app.controller('TestController', ['$scope', '$http', function($scope, $http) {
         }).error(function(data, status) {
             alert("Error updating orgunit. Data: " + data);
         });
+        */
     };
 
 	// When 'showBorders' changes, show the applicable borders.
@@ -171,32 +182,6 @@ app.controller('TestController', ['$scope', '$http', function($scope, $http) {
 		toggleBorders(testCtrl.allOrgUnits,testCtrl.showBorders.level);
 	});
 	
-	$scope.getLocation = function(){
-		getClosestFacilitys();
-	}
-
-	// PUT-test
-	$scope.updateOrgUnit = function(unit) {
-		var orgUnitID = unit.id;
-		alert("Click, id: " + orgUnitID);
-
-		console.log(unit);
-
-		// Setup request
-		var request = $http({
-			method: "put",
-			url: "http://inf5750-14.uio.no/api/organisationUnits/" + orgUnitID,
-			data: unit,
-		});
-
-		// Perform request
-		request.success(function(data) {
-			alert("Success!");
-		}).error(function(data, status) {
-			alert("Error! " + data);
-		});
-	};
-
     /**
     * Creates an orgunit and uploads it to the server.
     * NOTE: IDs, createdAt, lastUpdated and href seem to be added by server; no need to specify.
@@ -204,15 +189,18 @@ app.controller('TestController', ['$scope', '$http', function($scope, $http) {
     */
     $scope.createOrgUnit = function(unit) {
         // TODO: Validate forms in template: Blank should not be allowed, fuzzes stuff up.
+        // TODO: Fix circular json structures. I think referencing parents as json-objects is the culprit. Figure out how to represent parents.
+        // TODO: Check if children are updated automatically in parents when adding a new unit.
+        // TODO: Fix cancel button so that it closes container on click.
+
+        // Debug
+        console.log(unit);
+
 
         var apiUrl = "http://inf5750-14.uio.no/api/organisationUnits/";
-        
+
         // Updating save-button appearance for feedback
         $scope.unitAdded = true;
-
-        alert("Creating unit: " + unit.name);
-        alert("Level: " + unit.level);
-        alert("Parent: " + unit.parent.name);
 
         // Setup request
         var request = $http( {
@@ -225,7 +213,7 @@ app.controller('TestController', ['$scope', '$http', function($scope, $http) {
         request.success(function(data) {
             // Disable loading animation
             $scope.unitAdded = false;
-            alert("Success!");
+            alert("Success");
 
         }).error(function(data, status) {
             // Disable loading-animation
@@ -233,7 +221,6 @@ app.controller('TestController', ['$scope', '$http', function($scope, $http) {
             alert("Error :(");
             console.log("Create unit error:\n" + data);
         });
-
     };
 }]);
 
