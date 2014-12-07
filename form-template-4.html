@@ -1,7 +1,7 @@
 <fieldset class="form-group" id="facility">
 
 	<!-- Dropdown for parent unit -->
-	<label for="unit-name">Parent</label> <select class="form-control"
+	<label for="unit-parent">Parent</label> <select class="form-control"
 		data-ng-model="unit.parent"
 		data-ng-options="orgunit.name for orgunit in testCtrl.allOrgUnits | filter: {level:3}">
 		<option value="">Parent Unit</option>

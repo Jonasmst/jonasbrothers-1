@@ -43,6 +43,13 @@
 			Seems like the easiest solution, as we hardly "do" much with them to need to change much.
  */
 
+/* TODO: Fix: Units that are updated do not appear in the list after refreshing page.
+         It seems to be something with the customFilter. If you remove the custom filtering
+         from the ng-repeat, the updated units show up. Also, they show up under "national unit"
+         but not under "facility".
+         Levels change from 4 to 1 when updating, for some reason.
+*/
+
 //API-docs: https://www.dhis2.org/doc/snapshot/en/developer/html/dhis2_developer_manual.html
 
 var app = angular.module('facilityRegistry',[]);
@@ -97,7 +104,7 @@ app.controller('TestController', ['$scope', '$http', function($scope, $http) {
 		testCtrl.allOrgUnits = data.organisationUnits;
 
 		// Log all the info
-		console.log(testCtrl.allOrgUnits);
+		//console.log(testCtrl.allOrgUnits);
 
 		// Reads all the coordinates.
 		for (i = 0; i < testCtrl.allOrgUnits.length; i++)
@@ -144,7 +151,6 @@ app.controller('TestController', ['$scope', '$http', function($scope, $http) {
 
 	// Filters the options when adding a new orgunit/facility.
 	$scope.optionFilter = function(level) {
-
 		return function(option) {
 			return (option.level == 3 || option.level == 4)
 		}
@@ -181,6 +187,32 @@ app.controller('TestController', ['$scope', '$http', function($scope, $http) {
 
 	}
 	
+    /**
+    * Updates an orgunit. Called from save-button in template. 
+    * @param unit JSONObject of orgunit, modified in template.
+    */
+    $scope.updateOrgUnit = function(unit) {
+
+        var apiUrl = "http://inf5750-14.uio.no/api/organisationUnits/";
+
+        console.log(unit);
+
+        // Setup request
+        var request = $http({
+            method: "put",
+            url: apiUrl + unit.id,
+            data: unit,
+        });
+
+        // Perform request
+        request.success(function(data) {
+            // TODO: Some kind of feedback? Angular automatically updates template.
+            alert("Update success!");
+        }).error(function(data, status) {
+            alert("Update error");
+        });
+    };
+
 	// Finds shortest path using great-circle between two points.
 	// lat1, lon1: latitude and longitude for 'my position'
 	// lat2, lon2: latitude and longitude for unit position
@@ -201,6 +233,7 @@ app.controller('TestController', ['$scope', '$http', function($scope, $http) {
 	function deg2rad(deg) {
 		return deg * (Math.PI/180)
 	}
+
 
 	/**
 	 * Updates an orgunit. Called from save-button in template. 
@@ -226,72 +259,63 @@ app.controller('TestController', ['$scope', '$http', function($scope, $http) {
 		});
 	};
 
-	// When 'borderOptions' changes, show the applicable borders.
+	// When 'showBorders' changes, show the applicable borders.
 	$scope.$watch('testCtrl.showBorders',function() {
 		testCtrl.borderOptions[testCtrl.showBorders].checked = !testCtrl.borderOptions[testCtrl.showBorders].checked; 
 		toggleBorders(testCtrl.allOrgUnits,testCtrl.showBorders);
 	});
+	
+    /**
+    * Creates an orgunit and uploads it to the server.
+    * NOTE: IDs, createdAt, lastUpdated and href seem to be added by server; no need to specify.
+    * @params unit JSONObject representation of the orgunit.
+    */
+    $scope.createOrgUnit = function(unit) {
+        // TODO: Validate forms in template: Blank should not be allowed, fuzzes stuff up.
+        // TODO: Fix circular json structures. I think referencing parents as json-objects is the culprit. Figure out how to represent parents.
+        // TODO: Check if children are updated automatically in parents when adding a new unit.
+        // TODO: Fix cancel button so that it closes container on click.
 
-	// PUT-test
-	$scope.updateOrgUnit = function(unit) {
-		var orgUnitID = unit.id;
-		alert("Click, id: " + orgUnitID);
+        // Debug
+        console.log(unit);
 
-		console.log(unit);
+        var post_data = {
+            "name":unit.name,
+            "shortName":unit.shortName,
+            "level":unit.level,
+            //"parent": {"id":"123456", "name":"TestParent"}
+        };
 
-		// Setup request
-		var request = $http({
-			method: "put",
-			url: "http://inf5750-14.uio.no/api/organisationUnits/" + orgUnitID,
-			data: unit,
-		});
+        var apiUrl = "http://inf5750-14.uio.no/api/organisationUnits/";
 
-		// Perform request
-		request.success(function(data) {
-			alert("Success!");
-		}).error(function(data, status) {
-			alert("Error! " + data);
-		});
-	};
+        // Updating save-button appearance for feedback
+        $scope.unitAdded = true;
 
-	/**
-	 * Creates an orgunit and uploads it to the server.
-	 * NOTE: IDs, createdAt, lastUpdated and href seem to be added by server; no need to specify.
-	 * @params unit JSONObject representation of the orgunit.
-	 */
-	$scope.createOrgUnit = function(unit) {
-		// TODO: Validate forms in template: Blank should not be allowed, fuzzes stuff up.
+        // Setup request
+        var request = $http( {
+            method: "post",
+            url: apiUrl,
+            data: post_data,
+            headers: {
+                'Authorization': 'Basic YWRtaW46ZGlzdHJpY3Q=',
+                'Content-Type': 'application/json'
+            },
+        });
 
-		var apiUrl = "http://inf5750-14.uio.no/api/organisationUnits/";
+        // Perform request
+        request.success(function(data) {
+            // Disable loading animation
+            $scope.unitAdded = false;
+            alert("Create success");
 
-		// Updating save-button appearance for feedback
-		$scope.unitAdded = true;
+        }).error(function(data, status) {
+            // Disable loading-animation
+            $scope.unitAdded = false;
+            alert("Create error :(");
+            console.log("Create unit error:\n" + data);
+        });
+    };
 
-		alert("Creating unit: " + unit.name);
-		alert("Level: " + unit.level);
-		alert("Parent: " + unit.parent.name);
-
-		// Setup request
-		var request = $http( {
-			method: "post",
-			url: apiUrl,
-			data: unit,
-		});
-
-		// Perform request
-		request.success(function(data) {
-			// Disable loading animation
-			$scope.unitAdded = false;
-			alert("Success!");
-
-		}).error(function(data, status) {
-			// Disable loading-animation
-			$scope.unitAdded = false;
-			alert("Error :(");
-			console.log("Create unit error:\n" + data);
-		});
-
-	};
 }]);
 
 // Directive that allows us to dynamically change the input url.
