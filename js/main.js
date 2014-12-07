@@ -38,6 +38,9 @@
 
     To conclude, I'm pretty sure we've got orgunit-groups/districts mixed up.
 
+
+	Haakon: Should we just change the name of 'Organisation Unit Group's to 'District' then?
+			Seems like the easiest solution, as we hardly "do" much with them to need to change much.
  */
 
 //API-docs: https://www.dhis2.org/doc/snapshot/en/developer/html/dhis2_developer_manual.html
@@ -118,7 +121,7 @@ app.controller('TestController', ['$scope', '$http', function($scope, $http) {
 	$scope.updateMap = function(orgUnit) {
 		if(orgUnit.coordinates) {
 			if(orgUnit.level == 4) {
-				updateMarkers(orgUnit);
+				updateMarker(orgUnit);
 			} else if(orgUnit.level > 1) {
 				// Toggles whether the actual polygons will show or not.
 				orgUnit.polyPath.setVisible(!orgUnit.polyPath.getVisible());

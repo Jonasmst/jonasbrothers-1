@@ -45,7 +45,7 @@ function addMarkers(coordinates) {
 			map: map,
 			title: coordinates[i][0],
 			icon: blueMarker,
-			used: false,
+			current: false,
 		});
 
 		markers.push(marker);
@@ -59,29 +59,22 @@ function addMarkers(coordinates) {
 		})(marker, i));
 	}
 }
-//Shows all current markers.
-function showMarkers() {
+
+// Updates the marker of a single facility.
+function updateMarker(orgUnit) {
 	for(var i = 0; i < markers.length; i++) {
-		markers[i].setMap(map);
-	}
-}
-
-//Updates one or more markers on the map.
-function updateMarkers(orgUnit) {
-
-	//alert(orgUnit.coordinates[0]);
-	if(orgUnit.level == 4) {
-		for(var i = 0; i < markers.length; i++) {
-			if(markers[i].getTitle() == orgUnit.name)
-				if(markers[i].used == false){
-					markers[i].setIcon();
-					markers[i].used = true;
-				} else {
-					markers[i].setIcon(blueMarker);
-					markers[i].used = false;
-				}
+		if(markers[i].getTitle() == orgUnit.name) {
+			if(markers[i].current == false){
+				markers[i].setIcon();
+				markers[i].setMap(map);
+				markers[i].current = true;
+			} else {
+				markers[i].setIcon(blueMarker);
+				markers[i].setMap(map);
+				markers[i].current = false;
+			}
+			break;
 		}
-		showMarkers();
 	}
 }
 
