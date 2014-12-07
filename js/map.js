@@ -53,7 +53,7 @@ function addMarkers(coordinates) {
 		// Add a listener to each marker, so that they will display the name of the facility when clicked.
 		google.maps.event.addListener(marker, 'click', (function(marker, i) {
 			return function() {
-				infowindow.setContent(coordinates[i][0]);
+				infowindow.setContent("<h4>Facility</h4>"+coordinates[i][0]);
 				infowindow.open(map, marker);
 			}
 		})(marker, i));
@@ -88,9 +88,11 @@ function createPolygon(orgUnit) {
 	// The polygon object.
 	var polygon;
 	// Default color is red.
-	var polyColor = '#FF0000';
+	var polyColor = '#FF6969';
 	// Positional object.
 	var lngObject = "";
+	// The string to be contained in the infowindow.
+	var contentString = "Organisation Unit";
 	// InfoWindow to bind to the polygons.
 	infowindow = new google.maps.InfoWindow();
 
@@ -102,11 +104,13 @@ function createPolygon(orgUnit) {
 
 		lngObject = new google.maps.LatLng(coords[i][1],coords[i][0]);
 		orgPath.push(lngObject);
+	
 	}
 
 	if(orgUnit.level == 2) {
-		// Organisation Unit Group, use a different color.
+		// District, use a different color.
 		polyColor = '#009ACD';
+		contentString = "District";
 	}
 
 	// Draw polygon object.
@@ -118,40 +122,29 @@ function createPolygon(orgUnit) {
 		fillColor: polyColor,
 		fillOpacity: 0.25
 	})
-	/* Currently not working properly. Do we want info when orgUnits are clicked?.
-	google.maps.event.addListener(polygon, 'mouseover', (function(polygon, i) {
+	
+	// Makes the polygon clickable.
+	google.maps.event.addListener(polygon, 'click', (function(polygon, i) {
 		return function() {
-			infowindow.setContent(orgUnit.name);
-			infowindow.open(map, polygon);
+			infowindow.setContent("<h4>"+contentString+"</h4>" + orgUnit.name);
+			infowindow.setPosition(new google.maps.LatLng(coords[2][1],coords[2][0]));
+			infowindow.open(map);
 		}
 	})(polygon, i));
-	*/
+	
 	// Auto-hide the polygon.
 	orgUnit.polyPath = polygon;
 	orgUnit.polyPath.setMap(map);		
 	orgUnit.polyPath.setVisible(false);
 }
 
-//Activates all borders for the orgUnits of a certain level.
+// Toggles polygon visibility for districts/organisation units.
 function toggleBorders(orgUnits, level) {
-	
-	if(level == -1) {
-		// Make all polygons invisible.
-		for(i in orgUnits) {
-			if(orgUnits[i].level == 2 || orgUnits[i].level == 3)
-				orgUnits[i].polyPath.setVisible(false);
-		}
-	} else if(level == 0) {
-		// Make all polygons visible.
-		for(i in orgUnits) {
-			if(orgUnits[i].level == 2 || orgUnits[i].level == 3)
-				orgUnits[i].polyPath.setVisible(true);
-		}
-	} else {
-		// Make polygons for a specified level visible.
-		for(i in orgUnits) {
-			if(orgUnits[i].level == level)
+	for(i in orgUnits) {
+		if(orgUnits[i].polyPath) {
+			if(orgUnits[i].level == level) {
 				orgUnits[i].polyPath.setVisible(!orgUnits[i].polyPath.getVisible());
+			}
 		}
 	}
 }

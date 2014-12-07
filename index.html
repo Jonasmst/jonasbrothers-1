@@ -90,10 +90,22 @@
 					</div>
 					<!-- Show borders -->
 					<div class="col-md-3" style="margin-top: 2%">
-						<select class="form-control" data-ng-model="testCtrl.showBorders"
+					<!-- Checkboxes for the different border options. Not perfect. -->
+						<fieldset>
+						 	<input type="checkbox" data-ng-model="testCtrl.showBorders"
+						 	data-ng-checked="(testCtrl.showBorders == 3)|| testCtrl.borderOptions[2].checked" 
+						 	data-ng-click="testCtrl.showBorders = testCtrl.borderOptions[2].level" 
+						 	name="District"/>District<br/>
+						 	
+						 	<input type="checkbox" data-ng-model="testCtrl.showBorders"
+						 	data-ng-checked="(testCtrl.showBorders == 2 || testCtrl.borderOptions[3].checked)" 
+						 	data-ng-click="testCtrl.showBorders = testCtrl.borderOptions[3].level"
+						 	name="Organisation Unit"/>Organisation Unit<br/>
+						</fieldset>
+					<!--<select class="form-control" data-ng-model="testCtrl.showBorders"
 							data-ng-options="option.name for option in testCtrl.borderOptions">
 							<option value="">Show Borders..</option>
-						</select>
+						</select> -->
 					</div>
 				</div>
 				<!-- End options row -->
@@ -105,7 +117,6 @@
 						<!-- Form for inputting orgunit variables -->
 						<form name="createUnitForm" ng-submit="createOrgUnit(unit)">
 							<h3>Create new Facility/Organisation Unit</h3>
-
 							<div class="col-md-12" style="margin-top: 2%">
 								<label for="unit-name">Type</label>
 								<select class="form-control" data-ng-model="unit.type"
@@ -147,12 +158,10 @@
 								<div class="panel-body">
 									<!-- Update form -->
 									<form name="unitUpdateForm" ng-submit="updateOrgUnit(unit)">
-
 										<!-- Name -->
 										<fieldset class="form-group">
 											<textarea ng-model="unit.name" placeholder="Name"></textarea>
 										</fieldset>
-
 										<!-- TODO: Add more attributes -->
 
 										<!-- Submit button -->

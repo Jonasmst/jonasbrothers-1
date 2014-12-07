@@ -51,20 +51,20 @@ app.controller('TestController', ['$scope', '$http', function($scope, $http) {
 
 	var testCtrl = this;
 
-	testCtrl.levelOptions = [{name:'National Unit', level:1}, 
-	                         {name:'Organisation Unit Group', level:2}, 
-	                         {name:'Organisation Unit', level:3}, 
-	                         {name:'Facility',level:4}];
+	testCtrl.levelOptions = [{name:'National Unit', 		level:1}, 
+	                         {name:'District', 				level:2}, 
+	                         {name:'Organisation Unit', 	level:3}, 
+	                         {name:'Facility',				level:4}];
 
-	testCtrl.borderOptions = [{name:'None',level:-1},
-	                          {name:'All',level:0},
-	                          {name:'Organisation Units', level:3},
-	                          {name:'Organisation Unit Groups', level:2}];
+	testCtrl.borderOptions = [{name:'None',					level:-1},
+	                          {name:'All',					level:0},
+	                          {name:'District', 			level:2, checked:false},
+	                          {name:'Organisation Units', 	level:3, checked:false}];
 
 	// Default is Facility.
 	testCtrl.currentOrgType = testCtrl.levelOptions[3];
 	// Denotes whether the polygons for an OU should be shown or not.
-	testCtrl.showBorders = testCtrl.borderOptions[0].level;
+	testCtrl.showBorders = 0;
 
 	// Query the user is searching for.
 	testCtrl.currentQuery = "";
@@ -226,9 +226,10 @@ app.controller('TestController', ['$scope', '$http', function($scope, $http) {
 		});
 	};
 
-	// When 'showBorders' changes, show the applicable borders.
+	// When 'borderOptions' changes, show the applicable borders.
 	$scope.$watch('testCtrl.showBorders',function() {
-		toggleBorders(testCtrl.allOrgUnits,testCtrl.showBorders.level);
+		testCtrl.borderOptions[testCtrl.showBorders].checked = !testCtrl.borderOptions[testCtrl.showBorders].checked; 
+		toggleBorders(testCtrl.allOrgUnits,testCtrl.showBorders);
 	});
 
 	// PUT-test
@@ -293,7 +294,7 @@ app.controller('TestController', ['$scope', '$http', function($scope, $http) {
 	};
 }]);
 
-//Directive that allows us to dynamically change the input url.
+// Directive that allows us to dynamically change the input url.
 app.directive('createOrgUnitForm', function() {	
 	return {
 		link: function(scope, element, attrs) {
