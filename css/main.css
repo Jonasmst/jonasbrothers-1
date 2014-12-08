@@ -14,6 +14,45 @@
 	background-color:#DFF1FF;
 }
 
+/* Search bar icon */
+.glyphicon.glyphicon-search.form-control-feedback {
+    margin-right: 15px;
+}
+
+/* Scale up checkboxes */
+input[type=checkbox] {
+  /* All browsers except webkit*/
+  transform: scale(2.0);
+
+  /* Webkit browsers*/
+  -webkit-transform: scale(2.0);
+
+}
+
+
+/* Box containing border-options */
+#options-box {
+    padding: 10px;
+    background: rgba(0, 0, 0, 0.03);
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    border-radius: 5px;
+}
+
+/* The search-row */
+#search-row {
+    padding-top: 25px;
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+.col-md-12.form-group.has-feedback {
+    margin-bottom: 10px;
+}
+
+#toolbar-wrapper {
+    margin-top: 5px;
+}
+
 /* Animate save-button (for feedback) */
 .create-unit-animate {
     -animation: spin .7s infinite linear;

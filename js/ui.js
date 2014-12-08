@@ -10,11 +10,12 @@ $(document).ready(function() {
 		$("#create-unit-row").slideToggle();
 	});
 
-	// Hides container on cancel button onClick
+});
+
+// Listener for cancel-button, applying the following code when the cancel-button is added to the DOM.
+$(document).arrive("#create-unit-cancel-btn", function() {
+	// Hides the Create Unit-element on click.
 	$("#create-unit-cancel-btn").click(function() {
-		alert("cancel");
 		$("#create-unit-row").slideToggle();
 	});
-
-
 });

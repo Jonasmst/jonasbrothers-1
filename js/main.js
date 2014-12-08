@@ -80,6 +80,7 @@ app.controller('TestController', ['$scope', '$http', function($scope, $http) {
 	testCtrl.initUnits = [];
 	testCtrl.sortOnPosition = false;
 	
+    // What is this?
 	var myPosition = new google.maps.Marker({
 		position: new google.maps.LatLng(8.269720, -12.483215),
 		map: map,
@@ -235,36 +236,6 @@ app.controller('TestController', ['$scope', '$http', function($scope, $http) {
 	}
 
 
-	/**
-	 * Updates an orgunit. Called from save-button in template. 
-	 * @param unit JSONObject of orgunit, modified in template.
-	 */
-	$scope.updateOrgUnit = function(unit) {
-
-		var apiUrl = "http://inf5750-14.uio.no/api/organisationUnits/";
-
-		// Setup request
-		var request = $http({
-			method: "put",
-			url: apiUrl + orgUnitID,
-			data: unit,
-		});
-
-		// Perform request
-		request.success(function(data) {
-			// TODO: Some kind of feedback? Angular automatically updates template.
-			alert("Success!");
-		}).error(function(data, status) {
-			alert("Error updating orgunit. Data: " + data);
-		});
-	};
-
-	// When 'showBorders' changes, show the applicable borders.
-	$scope.$watch('testCtrl.showBorders',function() {
-		testCtrl.borderOptions[testCtrl.showBorders].checked = !testCtrl.borderOptions[testCtrl.showBorders].checked; 
-		toggleBorders(testCtrl.allOrgUnits,testCtrl.showBorders);
-	});
-	
     /**
     * Creates an orgunit and uploads it to the server.
     * NOTE: IDs, createdAt, lastUpdated and href seem to be added by server; no need to specify.
@@ -315,6 +286,13 @@ app.controller('TestController', ['$scope', '$http', function($scope, $http) {
             console.log("Create unit error:\n" + data);
         });
     };
+
+
+    // When 'borderOptions' changes, show the applicable borders.
+$scope.$watch('testCtrl.showBorders',function() {
+    testCtrl.borderOptions[testCtrl.showBorders].checked = !testCtrl.borderOptions[testCtrl.showBorders].checked;
+    toggleBorders(testCtrl.allOrgUnits,testCtrl.showBorders);
+});
 
 }]);
 

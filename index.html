@@ -41,6 +41,8 @@
 <!-- Optional theme -->
 <link rel="stylesheet"
 	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap-theme.min.css">
+
+
 </head>
 
 <!-- We reference the controller here. -->
@@ -60,53 +62,65 @@
 			</div>
 
 			<!-- Right-hand side. Added a background so we can see the boundaries of the box. -->
-			<div class="col-md-4" style="background-color: #f0f8ff">
+			<div class="col-md-4 col-sm-2 text-center" style="background-color: #f0f8ff">
+
+				<!-- Show borders -->
+					<div class="col-md-12" id="options-container" style="margin-top: 2%">
+						<label style="float:left;" for="Border options">Border options</label>
+						<div id="options-box" class="col-md-12">
+							<!-- Checkboxes for the different border options. Not perfect. -->
+							<fieldset>
+								<div class="col-md-6">
+								 	<input type="checkbox" data-ng-model="testCtrl.showBorders"
+								 	data-ng-checked="(testCtrl.showBorders == 3)|| testCtrl.borderOptions[2].checked" 
+								 	data-ng-click="testCtrl.showBorders = testCtrl.borderOptions[2].level" 
+								 	name="District" value="District"/><br/><span class="option-text">District</span>
+							 	</div>
+							 	<div class="col-md-6">
+								 	<input type="checkbox" data-ng-model="testCtrl.showBorders"
+								 	data-ng-checked="(testCtrl.showBorders == 2 || testCtrl.borderOptions[3].checked)" 
+								 	data-ng-click="testCtrl.showBorders = testCtrl.borderOptions[3].level"
+								 	name="Organisation Unit"/><span class="option-text"><br/>Organisation Unit</span>
+								</div>
+							</fieldset>
+							<!--<select class="form-control" data-ng-model="testCtrl.showBorders"
+								data-ng-options="option.name for option in testCtrl.borderOptions">
+								<option value="">Show Borders..</option>
+							</select> -->
+						</div>
+					</div>
 
 				<!-- Options for search. Currently 2 useful menus and 2 useful buttons.-->
-				<div class="row">
-
-					<div class="col-md-3" style="margin-top: 2%">
-						<!-- Find me button -->
-						<button type="button" class="btn btn-default btn-md"
-							ng-click="getLocation()">
-							<span class="glyphicon glyphicon-map-marker" aria-hidden="true"></span>
-							Find me
-						</button>
-					</div>
-					<div class="col-md-3" style="margin-top: 2%">
-						<!-- Create unit button -->
-						<button type="button" class="btn btn-default btn-md"
-							id="add-new-btn">
-							<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-							Add new
-						</button>
-					</div>
-					<!-- (Selects) Type to search for -->
-					<div class="col-md-3" style="margin-top: 2%">
-						<select class="form-control"
-							data-ng-model="testCtrl.currentOrgType"
-							data-ng-options="option.name for option in testCtrl.levelOptions">
-							<option value="">Unit Type..</option>
-						</select>
-					</div>
-					<!-- Show borders -->
-					<div class="col-md-3" style="margin-top: 2%">
-					<!-- Checkboxes for the different border options. Not perfect. -->
-						<fieldset>
-						 	<input type="checkbox" data-ng-model="testCtrl.showBorders"
-						 	data-ng-checked="(testCtrl.showBorders == 3)|| testCtrl.borderOptions[2].checked" 
-						 	data-ng-click="testCtrl.showBorders = testCtrl.borderOptions[2].level" 
-						 	name="District"/>District<br/>
-						 	
-						 	<input type="checkbox" data-ng-model="testCtrl.showBorders"
-						 	data-ng-checked="(testCtrl.showBorders == 2 || testCtrl.borderOptions[3].checked)" 
-						 	data-ng-click="testCtrl.showBorders = testCtrl.borderOptions[3].level"
-						 	name="Organisation Unit"/>Organisation Unit<br/>
-						</fieldset>
-					<!--<select class="form-control" data-ng-model="testCtrl.showBorders"
-							data-ng-options="option.name for option in testCtrl.borderOptions">
-							<option value="">Show Borders..</option>
-						</select> -->
+				<div class="row" id="toolbar-row">
+					<div class="col-lg-12 col-md-12" id="toolbar-wrapper">
+						<div class="col-lg-6 col-md-12">
+							<div class="col-lg-6 col-md-6" style="margin-top: 2%">
+								<!-- Find me button -->
+								<button type="button" class="btn btn-default btn-md"
+									ng-click="getLocation()">
+									<span class="glyphicon glyphicon-map-marker" aria-hidden="true"></span>
+									Find me
+								</button>
+							</div>
+							<div class="col-lg-6 col-md-6" style="margin-top: 2%">
+								<!-- Create unit button -->
+								<button type="button" class="btn btn-default btn-md"
+									id="add-new-btn">
+									<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+									Add new
+								</button>
+							</div>
+						</div>
+						<!-- (Selects) Type to search for -->
+						<div class="col-lg-6 col-md-12">
+							<div class="col-lg-12 col-md-12" style="margin-top: 2%">
+								<select class="form-control"
+									data-ng-model="testCtrl.currentOrgType"
+									data-ng-options="option.name for option in testCtrl.levelOptions">
+									<option value="">Unit Type..</option>
+								</select>
+							</div>
+						</div>
 					</div>
 				</div>
 				<!-- End options row -->
@@ -136,12 +150,12 @@
 				<!-- End new unit container row -->
 
 				<!-- Search-bar -->
-				<div class="row" style="margin-top: 2%; margin-bottom: 2%">
-					<div class="col-md-12">
+				<div class="row" id="search-row" >
+					<div class="col-md-12 form-group has-feedback">
 						<input id="searchBar" type="text" class="form-control"
 							placeholder="Search for {{testCtrl.currentOrgType.name}}..."
-							data-ng-model="testCtrl.currentQuery">
-
+							data-ng-model="testCtrl.currentQuery" />
+						<i class="glyphicon glyphicon-search form-control-feedback"></i>
 					</div>
 				</div>
 
