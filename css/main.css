@@ -32,11 +32,14 @@ input[type=checkbox] {
 /* Toolbox, upper part of sidebar */
 #toolbox {
     background: #f0f8ff;
+    border: 2px solid #ccc;
+    border-bottom: 0px;
 }
 
 /* Results, lower part of sidebar */
 #results {
     border: 2px solid #ccc;
+    border-top: 0px;
 }
 
 .menu-container{
@@ -91,4 +94,11 @@ input[type=checkbox] {
 @keyframes spin {
     from { transform: scale(1) rotate(0deg);}
     to { transform: scale(1) rotate(360deg);}
+}
+
+/* Testing some media-queries */
+@media screen and (max-height: 736px) and (max-width:500px){
+    #map-canvas {
+        height:200px;
+    }
 }
