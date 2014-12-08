@@ -6,6 +6,13 @@ var blueMarker;
 var redMarker;
 var markers;
 var infowindow;
+var closestMarker;
+var myPosition = new google.maps.Marker({
+	position: new google.maps.LatLng(8.269720, -12.483215), // temporary position
+	map: map,
+	title: "My location",
+	icon: redMarker,
+});
 
 //Initializes the map.
 function initialize() {
@@ -58,7 +65,7 @@ function addMarkers(coordinates) {
 	}
 }
 
-// Updates the marker of a single facility.
+//Updates the marker of a single facility.
 function updateMarker(orgUnit) {
 	for(var i = 0; i < markers.length; i++) {
 		if(markers[i].getTitle() == orgUnit.name) {
@@ -115,7 +122,7 @@ function createPolygon(orgUnit) {
 		lngObject = new google.maps.LatLng(coords[i][1],coords[i][0]);
 		bounds.extend(lngObject);
 		orgPath.push(lngObject);
-	
+
 	}
 
 	if(orgUnit.level == 2) {
@@ -133,7 +140,7 @@ function createPolygon(orgUnit) {
 		fillColor: polyColor,
 		fillOpacity: 0.25,
 	})
-	
+
 	// Makes the polygon clickable.
 	google.maps.event.addListener(polygon, 'click', (function(polygon, i) {
 		return function() {
@@ -143,7 +150,7 @@ function createPolygon(orgUnit) {
 			toggleHighlight(orgUnit);
 		}
 	})(polygon, i));
-	
+
 	// Auto-hide the polygon.
 	orgUnit.polyPath = polygon;
 	orgUnit.polyPath.setMap(map);		
@@ -190,18 +197,61 @@ function contains(poly, unit){
 
 
 //Sets 'my location'. 
-function set_location(myPosition) {
-	alert("SET " + myPosition.title);
-	myPosition.setIcon();
-	markers.push(myPosition);
-	showMarkers();
+function set_location(position) {
+	//var latitude = position.coords.latitude;
+	//var longitude = position.coords.longitude;
+	//myPosition.position = new google.maps.LatLng(latitude, longitude);
+
+	myPosition.setMap(map);
+	myPosition.setIcon(redMarker);
+	myPosition.setVisible(true);
+	// set different marker for closest facility
+	closestMarker = markers[0];
+	var closestDist = get_Distance(myPosition.position.lat(), myPosition.position.lng(), markers[0].position.lat(), markers[0].position.lng());
+	// check for all units
+	for(i = 0; i < markers.length; i++){
+		var tmp = get_Distance(myPosition.position.lat(), myPosition.position.lng(), markers[i].position.lat(), markers[i].position.lng());
+		if(tmp < closestDist){
+			closestDist = tmp;
+			closestMarker = markers[i];
+		}
+	}
+	closestMarker.setIcon(redMarker);
+	// Add circle overlay and bind to marker
+	var circle = new google.maps.Circle({
+	  map: map,
+	  radius: closestDist * 1000 + 1,
+	  fillColor: '#AA0000',
+	  strokeWeight: 0.0,
+	});
+	circle.bindTo('center', myPosition, 'position');
 }
 
-// removes marker
-function remove_location(myPosition){
-	alert("Remove " + myPosition.title);
-	markers.splice(myPosition);
-	showMarkers();
+//Finds shortest path using great-circle between two points.
+//lat1, lon1: latitude and longitude for 'my position'
+//lat2, lon2: latitude and longitude for unit position
+function get_Distance(lat1, lon1, lat2, lon2) {
+	var R = 6371; // Radius of the earth in km
+	var dLat = deg2rad(lat2-lat1);  // deg2rad below
+	var dLon = deg2rad(lon2-lon1); 
+	var a = 
+		Math.sin(dLat/2) * Math.sin(dLat/2) +
+		Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * 
+		Math.sin(dLon/2) * Math.sin(dLon/2)
+		; 
+	var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
+	var d = R * c; // Distance in km
+	return d;
+}
+
+function deg2rad(deg) {
+	return deg * (Math.PI/180)
+}
+
+//removes marker
+function remove_location(){
+	closestMarker.setIcon(blueMarker);
+	myPosition.setVisible(false);
 }
 
 
