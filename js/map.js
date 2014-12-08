@@ -190,8 +190,9 @@ function set_location(position) {
 	// Add circle overlay and bind to marker
 	var circle = new google.maps.Circle({
 	  map: map,
-	  radius: closestDist * 1000,
-	  fillColor: '#AA0000'
+	  radius: closestDist * 1000 + 1,
+	  fillColor: '#AA0000',
+	  strokeWeight: 0.0,
 	});
 	circle.bindTo('center', myPosition, 'position');
 }
