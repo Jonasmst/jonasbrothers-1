@@ -142,8 +142,15 @@ function createPolygon(orgUnit) {
 function toggleBorders(orgUnits, level) {
 	for(i in orgUnits) {
 		if(orgUnits[i].polyPath) {
-			if(orgUnits[i].level == level) {
-				orgUnits[i].polyPath.setVisible(!orgUnits[i].polyPath.getVisible());
+			if(level == -1) {
+				orgUnits[i].polyPath.setVisible(false);
+			} else if(level == 0) {
+				orgUnits[i].polyPath.setVisible(true);
+			} 
+			if(orgUnits[i].level == level && (level == 2 || level == 3)){
+				orgUnits[i].polyPath.setVisible(true);	
+			} else if(level == 2 || level == 3){
+				orgUnits[i].polyPath.setVisible(false);	
 			}
 		}
 	}

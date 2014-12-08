@@ -68,25 +68,10 @@
 					<div class="col-md-12" id="options-container" style="margin-top: 2%">
 						<label style="float:left;" for="Border options">Border options</label>
 						<div id="options-box" class="col-md-12">
-							<!-- Checkboxes for the different border options. Not perfect. -->
-							<fieldset>
-								<div class="col-md-6">
-								 	<input type="checkbox" data-ng-model="testCtrl.showBorders"
-								 	data-ng-checked="(testCtrl.showBorders == 3)|| testCtrl.borderOptions[2].checked" 
-								 	data-ng-click="testCtrl.showBorders = testCtrl.borderOptions[2].level" 
-								 	name="District" value="District"/><br/><span class="option-text">District</span>
-							 	</div>
-							 	<div class="col-md-6">
-								 	<input type="checkbox" data-ng-model="testCtrl.showBorders"
-								 	data-ng-checked="(testCtrl.showBorders == 2 || testCtrl.borderOptions[3].checked)" 
-								 	data-ng-click="testCtrl.showBorders = testCtrl.borderOptions[3].level"
-								 	name="Organisation Unit"/><span class="option-text"><br/>Organisation Unit</span>
-								</div>
-							</fieldset>
-							<!--<select class="form-control" data-ng-model="testCtrl.showBorders"
+							<select class="form-control" data-ng-model="testCtrl.showBorders"
 								data-ng-options="option.name for option in testCtrl.borderOptions">
 								<option value="">Show Borders..</option>
-							</select> -->
+							</select>
 						</div>
 					</div>
 

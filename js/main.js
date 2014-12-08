@@ -57,7 +57,6 @@ var app = angular.module('facilityRegistry',[]);
 app.controller('TestController', ['$scope', '$http', function($scope, $http) {
 
 	var testCtrl = this;
-
 	testCtrl.levelOptions = [{name:'National Unit', 		level:1}, 
 	                         {name:'District', 				level:2}, 
 	                         {name:'Organisation Unit', 	level:3}, 
@@ -65,13 +64,13 @@ app.controller('TestController', ['$scope', '$http', function($scope, $http) {
 
 	testCtrl.borderOptions = [{name:'None',					level:-1},
 	                          {name:'All',					level:0},
-	                          {name:'District', 			level:2, checked:false},
-	                          {name:'Organisation Units', 	level:3, checked:false}];
+	                          {name:'District', 			level:2},
+	                          {name:'Organisation Units', 	level:3}];
 
 	// Default is Facility.
 	testCtrl.currentOrgType = testCtrl.levelOptions[3];
 	// Denotes whether the polygons for an OU should be shown or not.
-	testCtrl.showBorders = 0;
+	testCtrl.showBorders = testCtrl.borderOptions[0];
 
 	// Query the user is searching for.
 	testCtrl.currentQuery = "";
@@ -290,10 +289,8 @@ app.controller('TestController', ['$scope', '$http', function($scope, $http) {
 
     // When 'borderOptions' changes, show the applicable borders.
 $scope.$watch('testCtrl.showBorders',function() {
-    testCtrl.borderOptions[testCtrl.showBorders].checked = !testCtrl.borderOptions[testCtrl.showBorders].checked;
-    toggleBorders(testCtrl.allOrgUnits,testCtrl.showBorders);
-});
-
+	toggleBorders(testCtrl.allOrgUnits,testCtrl.showBorders.level);
+	});
 }]);
 
 // Directive that allows us to dynamically change the input url.
