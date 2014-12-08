@@ -94,13 +94,16 @@ function createPolygon(orgUnit) {
 	var contentString = "Organisation Unit";
 	// InfoWindow to bind to the polygons.
 	infowindow = new google.maps.InfoWindow();
-
+	// Indicates whether the current orgunit is highlighted.
+	orgUnit.highlighted = false;
+	
 	// Extracts the coordinates.
 	for(var i = 0; i < coords.length; i++) {
 		coords[i] = coords[i].split(",");
 		
 		coords[i][0] = coords[i][0].substring(1,coords[i][0].length);
 		
+		// Coordinates at the beginning and may have "]]" or "[[" artifacts.
 		if(coords[i][1].substring(coords[i][1].length-1) == "]") {
 			coords[i][1] = coords[i][1].substring(0,coords[i][1].length-2);
 		} else if(coords[i][0].substring(0,1) == "[") {
@@ -128,7 +131,7 @@ function createPolygon(orgUnit) {
 		strokeOpacity: 0.8,
 		strokeWeight: 1,
 		fillColor: polyColor,
-		fillOpacity: 0.25
+		fillOpacity: 0.25,
 	})
 	
 	// Makes the polygon clickable.
@@ -136,7 +139,8 @@ function createPolygon(orgUnit) {
 		return function() {
 			infowindow.setContent("<h4>"+contentString+"</h4>" + orgUnit.name);
 			infowindow.setPosition(bounds.getCenter());
-			infowindow.open(map);
+			infowindow.open(map);	
+			toggleHighlight(orgUnit);
 		}
 	})(polygon, i));
 	
@@ -144,7 +148,17 @@ function createPolygon(orgUnit) {
 	orgUnit.polyPath = polygon;
 	orgUnit.polyPath.setMap(map);		
 	orgUnit.polyPath.setVisible(false);
-	
+}
+
+// Toggles whether the polygon is highlighted or not on the map.
+function toggleHighlight(orgUnit) {
+	if(!orgUnit.highlighted) {
+		orgUnit.polyPath.setOptions({strokeWeight: 3.5, fillOpacity: 0.0});
+		orgUnit.highlighted = true;
+	} else {
+		orgUnit.polyPath.setOptions({strokeWeight: 1.0, fillOpacity: 0.25	});
+		orgUnit.highlighted = false;
+	}
 }
 
 // Toggles polygon visibility for districts/organisation units.
