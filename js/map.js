@@ -36,8 +36,6 @@ function addMarkers(coordinates) {
 
 	var customImage = 'https://maps.gstatic.com/intl/en_us/mapfiles/markers2/measle_blue.png';
 
-	//alert("We in business now, boys.");
-
 	for (i = 0; i < coordinates.length; i++) { 
 		// Create and add a new marker per coordinate.
 		marker = new google.maps.Marker({
@@ -82,7 +80,8 @@ function createPolygon(orgUnit) {
 
 	// Splits the coordinate string into neat pairs of lat/lng.
 	var coords = orgUnit.coordinates.substring(3,orgUnit.coordinates.length-4).split("],");
-
+	// The boundaries of the polygon to be made.
+	var bounds = new google.maps.LatLngBounds();
 	// Path of the polygon object. 
 	var orgPath = [];
 	// The polygon object.
@@ -99,10 +98,19 @@ function createPolygon(orgUnit) {
 	// Extracts the coordinates.
 	for(var i = 0; i < coords.length; i++) {
 		coords[i] = coords[i].split(",");
+		
 		coords[i][0] = coords[i][0].substring(1,coords[i][0].length);
+		
+		if(coords[i][1].substring(coords[i][1].length-1) == "]") {
+			coords[i][1] = coords[i][1].substring(0,coords[i][1].length-2);
+		} else if(coords[i][0].substring(0,1) == "[") {
+			coords[i][0] = coords[i][0].substring(2,coords[i][0].length);
+		}
+		
 		var lngObject = new google.maps.LatLng(coords[i][1],coords[i][0]);
-
+		
 		lngObject = new google.maps.LatLng(coords[i][1],coords[i][0]);
+		bounds.extend(lngObject);
 		orgPath.push(lngObject);
 	
 	}
@@ -118,7 +126,7 @@ function createPolygon(orgUnit) {
 		paths: orgPath, 
 		strokeColor: polyColor,
 		strokeOpacity: 0.8,
-		strokeWeight: 2,
+		strokeWeight: 1,
 		fillColor: polyColor,
 		fillOpacity: 0.25
 	})
@@ -127,7 +135,7 @@ function createPolygon(orgUnit) {
 	google.maps.event.addListener(polygon, 'click', (function(polygon, i) {
 		return function() {
 			infowindow.setContent("<h4>"+contentString+"</h4>" + orgUnit.name);
-			infowindow.setPosition(new google.maps.LatLng(coords[2][1],coords[2][0]));
+			infowindow.setPosition(bounds.getCenter());
 			infowindow.open(map);
 		}
 	})(polygon, i));
@@ -136,6 +144,7 @@ function createPolygon(orgUnit) {
 	orgUnit.polyPath = polygon;
 	orgUnit.polyPath.setMap(map);		
 	orgUnit.polyPath.setVisible(false);
+	
 }
 
 // Toggles polygon visibility for districts/organisation units.
