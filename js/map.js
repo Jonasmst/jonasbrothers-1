@@ -144,7 +144,8 @@ function createPolygon(orgUnit) {
 	// Makes the polygon clickable.
 	google.maps.event.addListener(polygon, 'click', (function(polygon, i) {
 		return function() {
-			infowindow.setContent("<h4>"+contentString+"</h4>" + orgUnit.name);
+			infowindow.setContent("<div class='info'><h4>"+orgUnit.name+"</h4>" + contentString + "</div>");
+			infowindow.setOptions({maxWidth: 320});
 			infowindow.setPosition(bounds.getCenter());
 			infowindow.open(map);	
 			toggleHighlight(orgUnit);
