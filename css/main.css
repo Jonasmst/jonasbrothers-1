@@ -29,14 +29,38 @@ input[type=checkbox] {
 
 }
 
-
-/* Box containing border-options */
-#options-box {
-    padding: 10px;
-    background: rgba(0, 0, 0, 0.03);
-    border: 1px solid rgba(0, 0, 0, 0.2);
-    border-radius: 5px;
+/* Toolbox, upper part of sidebar */
+#toolbox {
+    background: #f0f8ff;
 }
+
+/* Results, lower part of sidebar */
+#results {
+    border: 2px solid #ccc;
+}
+
+.menu-container{
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    margin-bottom: 10px;
+    margin-top: 10px;
+    padding-bottom: 10px;
+    border-radius: 5px;
+    background: rgba(255, 255, 255, 0.5);
+}
+
+/* Menu labels (border options etc.) */
+.menu-label{
+    float: left;
+    margin-top: 20px;
+}
+
+/* The container for adding a new unit */
+#create-unit-row {
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    background: #f0f8ff;
+    margin-top: 10px;
+}
+
 
 /* The search-row */
 #search-row {

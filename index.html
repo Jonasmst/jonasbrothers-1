@@ -62,141 +62,140 @@
 			</div>
 
 			<!-- Right-hand side. Added a background so we can see the boundaries of the box. -->
-			<div class="col-md-4 col-sm-2 text-center" style="background-color: #f0f8ff">
+			<div class="col-md-4 col-sm-2 text-center">
 
-				<!-- Show borders -->
-					<div class="col-md-12" id="options-container" style="margin-top: 2%">
-						<label style="float:left;" for="Border options">Border options</label>
-						<div id="options-box" class="col-md-12">
-							<!-- Checkboxes for the different border options. Not perfect. -->
-							<fieldset>
-								<div class="col-md-6">
-								 	<input type="checkbox" data-ng-model="testCtrl.showBorders"
-								 	data-ng-checked="(testCtrl.showBorders == 3)|| testCtrl.borderOptions[2].checked" 
-								 	data-ng-click="testCtrl.showBorders = testCtrl.borderOptions[2].level" 
-								 	name="District" value="District"/><br/><span class="option-text">District</span>
-							 	</div>
-							 	<div class="col-md-6">
-								 	<input type="checkbox" data-ng-model="testCtrl.showBorders"
-								 	data-ng-checked="(testCtrl.showBorders == 2 || testCtrl.borderOptions[3].checked)" 
-								 	data-ng-click="testCtrl.showBorders = testCtrl.borderOptions[3].level"
-								 	name="Organisation Unit"/><span class="option-text"><br/>Organisation Unit</span>
-								</div>
-							</fieldset>
-							<!--<select class="form-control" data-ng-model="testCtrl.showBorders"
-								data-ng-options="option.name for option in testCtrl.borderOptions">
-								<option value="">Show Borders..</option>
-							</select> -->
-						</div>
-					</div>
+				<!-- Toolbox / upper part of sidebar -->
+				<div class="col-lg-12 col-md-12" id="toolbox">
+					<h2>Menu</h2>
 
-				<!-- Options for search. Currently 2 useful menus and 2 useful buttons.-->
-				<div class="row" id="toolbar-row">
-					<div class="col-lg-12 col-md-12" id="toolbar-wrapper">
-						<div class="col-lg-6 col-md-12">
-							<div class="col-lg-6 col-md-6" style="margin-top: 2%">
-								<!-- Find me button -->
+					<!-- Actions -->
+					<div class="col-lg-12 col-md-12 menu-container">
+						<label class="menu-label" for="Actions">Actions</label>
+						<!-- Actions box -->
+						<div class="actions-box col-lg-12 col-md-12">
+							<!-- Find me button -->
+							<div class="col-lg-6 col-md-6">
 								<button type="button" class="btn btn-default btn-md"
 									ng-click="getLocation()">
 									<span class="glyphicon glyphicon-map-marker" aria-hidden="true"></span>
 									Find me
 								</button>
 							</div>
-							<div class="col-lg-6 col-md-6" style="margin-top: 2%">
-								<!-- Create unit button -->
+							<!-- Add new button -->
+							<div class="col-lg-6 col-md-6">
 								<button type="button" class="btn btn-default btn-md"
 									id="add-new-btn">
 									<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
 									Add new
 								</button>
 							</div>
+
+							<!-- Add new container -->
+							<div class="col-lg-12 col-md-12" id="create-unit-row">
+								<h4>Create new Facility/Organisation Unit</h4>
+								
+								<!-- The form -->
+								<form name="createUnitForm" ng-submit="createOrgUnit(unit)">
+
+									<div class="col-md-12" style="margin-top: 2%">
+										<label for="unit-name">Type</label>
+										<select class="form-control" data-ng-model="unit.type"
+											data-ng-options="option.name for option in testCtrl.levelOptions | filter:optionFilter(option)">
+											<option value="">Unit Type..</option>
+										</select>
+									</div>
+
+									<!-- Submitting form. Which form shown depends on the type chosen above. -->
+									<div class="col-md-12" style="margin-top: 2%">
+										<div create-org-unit-form orgtype="{{unit.type.level}}"></div>
+									</div>
+
+								</form> <!-- End form -->
+
+							</div> <!-- End add new container -->
+
+						</div><!-- End actions box -->
+					</div> <!-- End Actions -->
+
+					<!-- Border options -->
+					<div class="col-lg-12 col-md-12 menu-container">
+						<label class="menu-label" for="Border options">Border options</label>
+						<div class="border-box col-lg-12 col-md-12">
+							<select class="form-control" data-ng-model="testCtrl.showBorders"
+								data-ng-options="option.name for option in testCtrl.borderOptions">
+								<option value="">Show Borders..</option>
+							</select>
+						</div> <!-- End border-box -->
+					</div> <!-- End border-options -->
+
+					<!-- Filter results -->
+					<div class="col-lg-12 col-md-12 menu-container">
+						<label class="menu-label" for="Filter results">Filter results</label>
+						<div class="filter-box col-lg-12 col-md-12">
+							<select class="form-control"
+								data-ng-model="testCtrl.currentOrgType"
+								data-ng-options="option.name for option in testCtrl.levelOptions">
+								<option value="">Unit Type..</option>
+							</select>
+						</div> <!-- End filter-box -->
+					</div> <!-- End filter results -->
+
+				</div> <!-- End toolbox -->
+
+
+				<!-- Results, lower part of sidebar -->
+				<div class="col-lg-12 col-md-12" id="results">
+
+					<h2>Results</h2>
+
+					<!-- Search-bar -->
+					<div class="row" id="search-row" >
+						<div class="col-md-12 form-group has-feedback">
+							<input id="searchBar" type="text" class="form-control"
+								placeholder="Search for {{testCtrl.currentOrgType.name}}..."
+								data-ng-model="testCtrl.currentQuery" />
+							<i class="glyphicon glyphicon-search form-control-feedback"></i>
 						</div>
-						<!-- (Selects) Type to search for -->
-						<div class="col-lg-6 col-md-12">
-							<div class="col-lg-12 col-md-12" style="margin-top: 2%">
-								<select class="form-control"
-									data-ng-model="testCtrl.currentOrgType"
-									data-ng-options="option.name for option in testCtrl.levelOptions">
-									<option value="">Unit Type..</option>
-								</select>
-							</div>
-						</div>
 					</div>
-				</div>
-				<!-- End options row -->
 
-				<!-- Row for new unit container, hidden by default -->
-				<div class="row" id="create-unit-row">
-					<!-- Create unit container. Hidden by default, revealed when used -->
-					<div class="col-md-12" id="create-unit-container">
-						<!-- Form for inputting orgunit variables -->
-						<form name="createUnitForm" ng-submit="createOrgUnit(unit)">
-							<h3>Create new Facility/Organisation Unit</h3>
-							<div class="col-md-12" style="margin-top: 2%">
-								<label for="unit-name">Type</label>
-								<select class="form-control" data-ng-model="unit.type"
-									data-ng-options="option.name for option in testCtrl.levelOptions | filter:optionFilter(option)">
-									<option value="">Unit Type..</option>
-								</select>
-							</div>
-
-							<!-- Submitting form. Which form shown depends on the type chosen above. -->
-							<div class="col-md-12" style="margin-top: 2%">
-								<div create-org-unit-form orgtype="{{unit.type.level}}"></div>
-							</div>
-						</form>
-					</div>
-				</div>
-				<!-- End new unit container row -->
-
-				<!-- Search-bar -->
-				<div class="row" id="search-row" >
-					<div class="col-md-12 form-group has-feedback">
-						<input id="searchBar" type="text" class="form-control"
-							placeholder="Search for {{testCtrl.currentOrgType.name}}..."
-							data-ng-model="testCtrl.currentQuery" />
-						<i class="glyphicon glyphicon-search form-control-feedback"></i>
-					</div>
-				</div>
-
-				<!-- Drop-down list beneath the search bar. -->
-				<div class="row">
-					<div class="container-fluid">
-						<div class="panel-group">
-							<!-- Can add more filters to make the search tool more complex -->
-							<div class="panel panel-default" id="unit-panel"
-								ng-repeat="unit in testCtrl.allOrgUnits | filter:customFilter(unit) | limitTo:10">
-								<div class="panel-heading" data-ng-click="updateMap(unit)">
-									{{unit.name}}
-									<div class="level" style="text-align: right">{{testCtrl.currentOrgType.name}}</div>
-								</div>
-								<div class="panel-body">
-									<!-- Update form -->
-									<form name="unitUpdateForm" ng-submit="updateOrgUnit(unit)">
-										<!-- Name -->
-										<fieldset class="form-group">
+					<!-- Drop-down list beneath the search bar. -->
+					<div class="row">
+						<div class="container-fluid">
+							<div class="panel-group">
+								<!-- Can add more filters to make the search tool more complex -->
+								<div class="panel panel-default" id="unit-panel"
+									ng-repeat="unit in testCtrl.allOrgUnits | filter:customFilter(unit) | limitTo:10">
+									<div class="panel-heading" data-ng-click="updateMap(unit)">
+										{{unit.name}}
+										<div class="level" style="text-align: right">{{testCtrl.currentOrgType.name}}</div>
+									</div>
+									<div class="panel-body">
+										<!-- Update form -->
+										<form name="unitUpdateForm" ng-submit="updateOrgUnit(unit)">
 											<!-- Name -->
-											<label for="unit-name">Name</label>
-											<input ng-model="unit.name" placeholder="Name" class="form-control" />
-										
+											<fieldset class="form-group">
+												<!-- Name -->
+												<label for="unit-name">Name</label>
+												<input ng-model="unit.name" placeholder="Name" class="form-control" />
+											
+												<!-- TODO: Add more attributes -->
+												<label for="unit-shortname">Short name</label>
+												<input ng-model="unit.shortName" placeholder="Short name" class="form-control" />
+											</fieldset>
 											<!-- TODO: Add more attributes -->
-											<label for="unit-shortname">Short name</label>
-											<input ng-model="unit.shortName" placeholder="Short name" class="form-control" />
-										</fieldset>
-										<!-- TODO: Add more attributes -->
-										<!-- Submit button -->
-										<fieldset class="form-group">
-											<input type="submit" class="btn btn-primary pull-right"
-												value="Save" />
-										</fieldset>
-									</form>
+											<!-- Submit button -->
+											<fieldset class="form-group">
+												<input type="submit" class="btn btn-primary pull-right"
+													value="Save" />
+											</fieldset>
+										</form>
+									</div>
 								</div>
 							</div>
 						</div>
 					</div>
-				</div>
-			</div>
-		</div>
+				</div> <!-- End results -->
+			</div> <!-- End sidebar -->
 	</div>
 
 </body>

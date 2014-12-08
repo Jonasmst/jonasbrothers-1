@@ -279,6 +279,15 @@ app.controller('TestController', ['$scope', '$http', function($scope, $http) {
             $scope.unitAdded = false;
             alert("Create success");
 
+            // Hide on success
+            $("#create-unit-row").slideToggle();
+
+            // Reset form
+            //$scope.createUnitForm.$setPristine();
+
+            // Reset scope variable
+            $scope.unit = undefined;
+
         }).error(function(data, status) {
             // Disable loading-animation
             $scope.unitAdded = false;
@@ -289,10 +298,10 @@ app.controller('TestController', ['$scope', '$http', function($scope, $http) {
 
 
     // When 'borderOptions' changes, show the applicable borders.
-$scope.$watch('testCtrl.showBorders',function() {
-    testCtrl.borderOptions[testCtrl.showBorders].checked = !testCtrl.borderOptions[testCtrl.showBorders].checked;
-    toggleBorders(testCtrl.allOrgUnits,testCtrl.showBorders);
-});
+    $scope.$watch('testCtrl.showBorders',function() {
+        testCtrl.borderOptions[testCtrl.showBorders].checked = !testCtrl.borderOptions[testCtrl.showBorders].checked;
+        toggleBorders(testCtrl.allOrgUnits,testCtrl.showBorders);
+    });
 
 }]);
 
