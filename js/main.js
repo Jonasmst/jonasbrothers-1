@@ -253,12 +253,72 @@ app.controller('TestController', ['$scope', '$http', function($scope, $http) {
 		});
 	};
 
+    /**
+    * Creates an orgunit and uploads it to the server.
+    * NOTE: IDs, createdAt, lastUpdated and href seem to be added by server; no need to specify.
+    * @params unit JSONObject representation of the orgunit.
+    */
+    $scope.createOrgUnit = function(unit) {
+        // TODO: Validate forms in template: Blank should not be allowed, fuzzes stuff up.
+        // TODO: Fix circular json structures. I think referencing parents as json-objects is the culprit. Figure out how to represent parents.
+        // TODO: Check if children are updated automatically in parents when adding a new unit.
+        // TODO: Fix cancel button so that it closes container on click.
 
-	// When 'borderOptions' changes, show the applicable borders.
-	$scope.$watch('testCtrl.showBorders',function() {
-		testCtrl.borderOptions[testCtrl.showBorders].checked = !testCtrl.borderOptions[testCtrl.showBorders].checked;
-		toggleBorders(testCtrl.allOrgUnits,testCtrl.showBorders);
-	});
+        // Debug
+        console.log(unit);
+
+        var post_data = {
+            "name":unit.name,
+            "shortName":unit.shortName,
+            "level":unit.level,
+            //"parent": {"id":"123456", "name":"TestParent"}
+        };
+
+        var apiUrl = "http://inf5750-14.uio.no/api/organisationUnits/";
+
+        // Updating save-button appearance for feedback
+        $scope.unitAdded = true;
+
+        // Setup request
+        var request = $http( {
+            method: "post",
+            url: apiUrl,
+            data: post_data,
+            headers: {
+                'Authorization': 'Basic YWRtaW46ZGlzdHJpY3Q=',
+                'Content-Type': 'application/json'
+            },
+        });
+
+        // Perform request
+        request.success(function(data) {
+            // Disable loading animation
+            $scope.unitAdded = false;
+            alert("Create success");
+
+            // Hide on success
+            $("#create-unit-row").slideToggle();
+
+            // Reset form
+            //$scope.createUnitForm.$setPristine();
+
+            // Reset scope variable
+            $scope.unit = undefined;
+
+        }).error(function(data, status) {
+            // Disable loading-animation
+            $scope.unitAdded = false;
+            alert("Create error :(");
+            console.log("Create unit error:\n" + data);
+        });
+    };
+
+
+    // When 'borderOptions' changes, show the applicable borders.
+    $scope.$watch('testCtrl.showBorders',function() {
+        testCtrl.borderOptions[testCtrl.showBorders].checked = !testCtrl.borderOptions[testCtrl.showBorders].checked;
+        toggleBorders(testCtrl.allOrgUnits,testCtrl.showBorders);
+    });
 
 }]);
 
