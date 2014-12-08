@@ -48,7 +48,7 @@
          from the ng-repeat, the updated units show up. Also, they show up under "national unit"
          but not under "facility".
          Levels change from 4 to 1 when updating, for some reason.
-*/
+ */
 
 //API-docs: https://www.dhis2.org/doc/snapshot/en/developer/html/dhis2_developer_manual.html
 
@@ -57,7 +57,6 @@ var app = angular.module('facilityRegistry',[]);
 app.controller('TestController', ['$scope', '$http', function($scope, $http) {
 
 	var testCtrl = this;
-
 	testCtrl.levelOptions = [{name:'National Unit', 		level:1}, 
 	                         {name:'District', 				level:2}, 
 	                         {name:'Organisation Unit', 	level:3}, 
@@ -65,29 +64,22 @@ app.controller('TestController', ['$scope', '$http', function($scope, $http) {
 
 	testCtrl.borderOptions = [{name:'None',					level:-1},
 	                          {name:'All',					level:0},
-	                          {name:'District', 			level:2, checked:false},
-	                          {name:'Organisation Units', 	level:3, checked:false}];
+	                          {name:'District', 			level:2},
+	                          {name:'Organisation Units', 	level:3}];
 
 	// Default is Facility.
 	testCtrl.currentOrgType = testCtrl.levelOptions[3];
 	// Denotes whether the polygons for an OU should be shown or not.
-	testCtrl.showBorders = 0;
+	testCtrl.showBorders = testCtrl.borderOptions[0];
 
 	// Query the user is searching for.
 	testCtrl.currentQuery = "";
 	testCtrl.geoCoords = [];
 	testCtrl.allOrgUnits = [];
-	testCtrl.initUnits = [];
 	testCtrl.sortOnPosition = false;
-	
-    // What is this?
-	var myPosition = new google.maps.Marker({
-		position: new google.maps.LatLng(8.269720, -12.483215),
-		map: map,
-		title: "My location",
-		icon: blueMarker,
-		used: false,
-	});
+    testCtrl.currentLat = 0;
+    testCtrl.currentLng = 0;
+    testCtrl.locationLock = false;
 
 	// URL for orgunits-API
 	//var apiUrl = "http://inf5750-14.uio.no/api/organisationUnits.json?pageSize=1332";
@@ -96,7 +88,7 @@ app.controller('TestController', ['$scope', '$http', function($scope, $http) {
 	// Not all facilities have coordinates. Figure out how to correctly represent those we can.
 	//var apiUrl = "http://inf5750-14.uio.no/api/organisationUnits.json?fields=:identifiable,coordinates,level&pageSize=1332";
 
-	var apiUrl = "http://inf5750-14.uio.no/api/organisationUnits.json?fields=:identifiable,coordinates,level&pageSize=1332";
+	var apiUrl = "http://inf5750-14.uio.no/api/organisationUnits.json?fields=:identifiable,coordinates,level,shortName,parent&pageSize=2000";
 
 	// Cross-site redirect error solution: Run chrome with --disable-web-security
 	var base64 = "YWRtaW46ZGlzdHJpY3Q=";
@@ -120,6 +112,8 @@ app.controller('TestController', ['$scope', '$http', function($scope, $http) {
 			if((testCtrl.allOrgUnits[i].level == 3 || testCtrl.allOrgUnits[i].level == 2) &&
 					testCtrl.allOrgUnits[i].coordinates)
 				createPolygon(testCtrl.allOrgUnits[i]);
+
+        console.log(testCtrl.allOrgUnits);
 	}).
 	error(function(data, status, headers, config) {
 		alert("Error. Data: " + data);
@@ -132,8 +126,11 @@ app.controller('TestController', ['$scope', '$http', function($scope, $http) {
 				updateMarker(orgUnit);
 			} else if(orgUnit.level > 1) {
 				// Toggles whether the actual polygons will show or not.
-				orgUnit.polyPath.setVisible(!orgUnit.polyPath.getVisible());
-
+				if(testCtrl.showBorders.level < 0) {
+					orgUnit.polyPath.setVisible(!orgUnit.polyPath.getVisible());
+				} else {
+					toggleHighlight(orgUnit);
+				}
 			}
 		}
 	}
@@ -143,7 +140,7 @@ app.controller('TestController', ['$scope', '$http', function($scope, $http) {
 		// Custom filter. Currently filtering:
 		// - By level.
 		// - Query.
-		// TODO: filter by position
+
 		return function(orgUnit) {
 			return (orgUnit.level == testCtrl.currentOrgType.level && 
 					orgUnit.name.toLowerCase().indexOf(testCtrl.currentQuery.toLowerCase()) != -1);
@@ -162,6 +159,7 @@ app.controller('TestController', ['$scope', '$http', function($scope, $http) {
 	//		 It also gets mobile browser location, so it is suitable for mobile also.
 	// Filters the option after distance from 'my position'
 	$scope.getLocation = function(level){
+
 		if (navigator.geolocation) {
 			navigator.geolocation.getCurrentPosition(location_found);
 		} else {
@@ -170,142 +168,161 @@ app.controller('TestController', ['$scope', '$http', function($scope, $http) {
 		}
 	}
 
+    // Updates current position (lat and long) after where the mouse-pointer is over the map.
+    $scope.trackPosition = function() {
+        // Disable borders.
+        testCtrl.showBorders = testCtrl.borderOptions[0];
+        
+        if(testCtrl.locationLock == false) {
+            testCtrl.currentLat = mousePosition.position.lat();
+            testCtrl.currentLng = mousePosition.position.lng();
+        }
+    }
+
+    // Locks or unlocks (disable/enable) position-tracking.
+    $scope.lockPosition = function() {
+        testCtrl.locationLock = !testCtrl.locationLock;
+    }
+
+	/**
+	 * Sets if we want to sort orgunits based on closest to my position.
+	 * Calls methods set_location and remove_location from map.js
+	 * Remove comments to use real positions instead of the fixed position
+	 */
 	function location_found(position) {
-		//Remove for real valued positions
-		//var latitude = position.coords.latitude;
-		//var longitude = position.coords.longitude;
-		//myPosition.position = new google.maps.LatLng(latitude, longitude);
-		
 		if(testCtrl.sortOnPosition === false){
-			alert("Set Location");
 			testCtrl.sortOnPosition = true;
-			set_location(myPosition); // calls method from map.js and set my location on the map
+			set_location(position); // calls method from map.js and set my location on the map
 		}else {
-			alert("Remove location");
-			testCtrl.sortOnPosition = false
-			remove_location(myPosition); // Removes marker from map
+			testCtrl.sortOnPosition = false;
+			remove_location(position); // Removes marker from map
 		}
 
 	}
-	
-    /**
-    * Updates an orgunit. Called from save-button in template. 
-    * @param unit JSONObject of orgunit, modified in template.
-    */
-    $scope.updateOrgUnit = function(unit) {
 
-        var apiUrl = "http://inf5750-14.uio.no/api/organisationUnits/";
+	/**
+	 * Updates an orgunit. Called from save-button in template. 
+	 * @param unit JSONObject of orgunit, modified in template.
+	 */
+	$scope.updateOrgUnit = function(unit) {
 
-        console.log(unit);
+		var apiUrl = "http://inf5750-14.uio.no/api/organisationUnits/";
 
-        // Setup request
+		console.log(unit);
+
+		// Setup request
+		var request = $http({
+			method: "put",
+			url: apiUrl + unit.id,
+			data: unit,
+		});
+
+		// Perform request
+		request.success(function(data) {
+			// TODO: Some kind of feedback? Angular automatically updates template.
+			alert("Update success!");
+		}).error(function(data, status) {
+			alert("Update error");
+		});
+
+	};
+
+	/**
+	 * Creates an orgunit and uploads it to the server.
+	 * NOTE: IDs, createdAt, lastUpdated and href seem to be added by server; no need to specify.
+	 * @params unit JSONObject representation of the orgunit.
+	 */
+	$scope.createOrgUnit = function(unit) {
+		// TODO: Validate forms in template: Blank should not be allowed, fuzzes stuff up.
+		// TODO: Fix circular json structures. I think referencing parents as json-objects is the culprit. Figure out how to represent parents.
+		// TODO: Check if children are updated automatically in parents when adding a new unit.
+		// TODO: Fix cancel button so that it closes container on click.
+
+        // Release location-lock
+        testCtrl.locationLock = false;
+
+		// Debug
+		console.log(unit);
+
+        var coords = "[" + testCtrl.currentLng + "," + testCtrl.currentLat + "]";
+
+		var post_data = {
+				"name":unit.name,
+				"shortName":unit.shortName,
+                "level": unit.level,
+                "coordinates": coords,
+                //"coordinates": [testCtrl.currentLng, testCtrl.currentLat],
+                //"parent":unit.parent,
+				//"parent": {"id":"123456", "name":"TestParent"}
+		};
+
+		var apiUrl = "http://inf5750-14.uio.no/api/organisationUnits/";
+
+		// Updating save-button appearance for feedback
+		$scope.unitAdded = true;
+
+		// Setup request
+		var request = $http( {
+			method: "post",
+			url: apiUrl,
+			data: post_data,
+			headers: {
+				'Authorization': 'Basic YWRtaW46ZGlzdHJpY3Q=',
+				'Content-Type': 'application/json'
+			},
+		});
+
+		// Perform request
+		request.success(function(data) {
+			
+            console.log(data);
+
+            // Disable loading animation
+			$scope.unitAdded = false;
+			alert("Create success");
+
+             // Hide on success
+            $("#create-unit-row").slideToggle();
+
+            // Reset scope variable
+            $scope.unit = undefined;
+
+		}).error(function(data, status) {
+			// Disable loading-animation
+			$scope.unitAdded = false;
+			alert("Create error :(");
+			console.log("Create unit error:\n" + data);
+		});
+	};
+
+    // Deletes a unit. We're not making this accessible for users, only for us to delete test-data faster.
+    $scope.deleteUnit = function(unit) {
+        var apiUrl = "http://inf5750-14.uio.no/api/organisationUnits/" + unit.id;
+
         var request = $http({
-            method: "put",
-            url: apiUrl + unit.id,
-            data: unit,
-        });
-
-        // Perform request
-        request.success(function(data) {
-            // TODO: Some kind of feedback? Angular automatically updates template.
-            alert("Update success!");
-        }).error(function(data, status) {
-            alert("Update error");
-        });
-    };
-
-	// Finds shortest path using great-circle between two points.
-	// lat1, lon1: latitude and longitude for 'my position'
-	// lat2, lon2: latitude and longitude for unit position
-	function get_Distance(lat1, lon1, lat2, lon2) {
-		var R = 6371; // Radius of the earth in km
-		var dLat = deg2rad(lat2-lat1);  // deg2rad below
-		var dLon = deg2rad(lon2-lon1); 
-		var a = 
-			Math.sin(dLat/2) * Math.sin(dLat/2) +
-			Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * 
-			Math.sin(dLon/2) * Math.sin(dLon/2)
-			; 
-		var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
-		var d = R * c; // Distance in km
-		return d;
-	}
-
-	function deg2rad(deg) {
-		return deg * (Math.PI/180)
-	}
-
-
-    /**
-    * Creates an orgunit and uploads it to the server.
-    * NOTE: IDs, createdAt, lastUpdated and href seem to be added by server; no need to specify.
-    * @params unit JSONObject representation of the orgunit.
-    */
-    $scope.createOrgUnit = function(unit) {
-        // TODO: Validate forms in template: Blank should not be allowed, fuzzes stuff up.
-        // TODO: Fix circular json structures. I think referencing parents as json-objects is the culprit. Figure out how to represent parents.
-        // TODO: Check if children are updated automatically in parents when adding a new unit.
-        // TODO: Fix cancel button so that it closes container on click.
-
-        // Debug
-        console.log(unit);
-
-        var post_data = {
-            "name":unit.name,
-            "shortName":unit.shortName,
-            "level":unit.level,
-            //"parent": {"id":"123456", "name":"TestParent"}
-        };
-
-        var apiUrl = "http://inf5750-14.uio.no/api/organisationUnits/";
-
-        // Updating save-button appearance for feedback
-        $scope.unitAdded = true;
-
-        // Setup request
-        var request = $http( {
-            method: "post",
+            method:"delete",
             url: apiUrl,
-            data: post_data,
             headers: {
                 'Authorization': 'Basic YWRtaW46ZGlzdHJpY3Q=',
                 'Content-Type': 'application/json'
             },
         });
 
-        // Perform request
         request.success(function(data) {
-            // Disable loading animation
-            $scope.unitAdded = false;
-            alert("Create success");
-
-            // Hide on success
-            $("#create-unit-row").slideToggle();
-
-            // Reset form
-            //$scope.createUnitForm.$setPristine();
-
-            // Reset scope variable
-            $scope.unit = undefined;
-
+            console.log("Delete success");
         }).error(function(data, status) {
-            // Disable loading-animation
-            $scope.unitAdded = false;
-            alert("Create error :(");
-            console.log("Create unit error:\n" + data);
+            console.log("Delete error: " + data);
         });
-    };
-
+    }
 
     // When 'borderOptions' changes, show the applicable borders.
     $scope.$watch('testCtrl.showBorders',function() {
-        testCtrl.borderOptions[testCtrl.showBorders].checked = !testCtrl.borderOptions[testCtrl.showBorders].checked;
-        toggleBorders(testCtrl.allOrgUnits,testCtrl.showBorders);
-    });
+	   toggleBorders(testCtrl.allOrgUnits,testCtrl.showBorders.level);
+	});
 
 }]);
 
-// Directive that allows us to dynamically change the input url.
+//Directive that allows us to dynamically change the input url.
 app.directive('createOrgUnitForm', function() {	
 	return {
 		link: function(scope, element, attrs) {
