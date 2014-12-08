@@ -77,12 +77,13 @@ app.controller('TestController', ['$scope', '$http', function($scope, $http) {
 	testCtrl.currentQuery = "";
 	testCtrl.geoCoords = [];
 	testCtrl.allOrgUnits = [];
-	testCtrl.initUnits = [];
 	testCtrl.sortOnPosition = false;
+	testCtrl.units = [];
+	testCtrl.firstInit = true;
 	
     // What is this?
 	var myPosition = new google.maps.Marker({
-		position: new google.maps.LatLng(8.269720, -12.483215),
+		position: new google.maps.LatLng(8.269720, -12.483215), // temporary position
 		map: map,
 		title: "My location",
 		icon: blueMarker,
@@ -137,18 +138,48 @@ app.controller('TestController', ['$scope', '$http', function($scope, $http) {
 			}
 		}
 	}
-
+	
 	// A custom filter for the ng-repeat.
 	$scope.customFilter = function(name) {
 		// Custom filter. Currently filtering:
 		// - By level.
 		// - Query.
 		// TODO: filter by position
+		
 		return function(orgUnit) {
+			if(testCtrl.sortOnPosition === false && testCtrl.firstInit === false){
+				// Sort on markers from map.js
+				console.log("SortOnPosition === true");
+				return null;
+				
+			}
+			console.log("SortOnPosition === false");
 			return (orgUnit.level == testCtrl.currentOrgType.level && 
 					orgUnit.name.toLowerCase().indexOf(testCtrl.currentQuery.toLowerCase()) != -1);
 		}
 	}
+	
+	/*function get_closest_unit(sortedUnits){
+		var closestUnit = -1; //init value
+		var closestDist = -1;
+		for (i = 0; i < testCtrl.allOrgUnits.length; i++){
+			//if(sortedUnits[i].level == testCtrl.currentOrgType.level && 
+					//sortedUnits[i].name.toLowerCase().indexOf(testCtrl.currentQuery.toLowerCase()) != -1){
+				alert("1 ", myPosition.name);
+				//alert("2 ", myPosition.coords.longitude);
+				alert("3 ", sortedUnits[i].name);
+				//alert("4 ", sortedUnits[i].coords.longitude);
+				/*var tmpDist = get_Distance(myPosition.coords.latitude, myPosition.coords.longitude, 
+						sortedUnits[i], sortedUnits[i]);
+				if(tmpDist < closestDist || closestDist === -1){
+					closestDist = tmpDist;
+					closestUnit = sortedUnits[i];
+				}
+			//}
+		}
+		return closestUnit;
+		
+	}*/
 
 	// Filters the options when adding a new orgunit/facility.
 	$scope.optionFilter = function(level) {
@@ -162,6 +193,7 @@ app.controller('TestController', ['$scope', '$http', function($scope, $http) {
 	//		 It also gets mobile browser location, so it is suitable for mobile also.
 	// Filters the option after distance from 'my position'
 	$scope.getLocation = function(level){
+		testCtrl.firstInit = false;
 		if (navigator.geolocation) {
 			navigator.geolocation.getCurrentPosition(location_found);
 		} else {
@@ -170,20 +202,26 @@ app.controller('TestController', ['$scope', '$http', function($scope, $http) {
 		}
 	}
 
+	/**
+	 * Sets if we want to sort orgunits based on closest to my position.
+	 * Calls methods set_location and remove_location from map.js
+	 * Remove comments to use real positions instead of the fixed position
+	 */
 	function location_found(position) {
-		//Remove for real valued positions
 		//var latitude = position.coords.latitude;
 		//var longitude = position.coords.longitude;
 		//myPosition.position = new google.maps.LatLng(latitude, longitude);
 		
 		if(testCtrl.sortOnPosition === false){
-			alert("Set Location");
 			testCtrl.sortOnPosition = true;
 			set_location(myPosition); // calls method from map.js and set my location on the map
+			//$scope.customFilter("name");
+			//alert("TRUE");
 		}else {
-			alert("Remove location");
 			testCtrl.sortOnPosition = false
 			remove_location(myPosition); // Removes marker from map
+			//$scope.customFilter("name");
+			//alert("False");
 		}
 
 	}

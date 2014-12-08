@@ -161,17 +161,13 @@ function contains(poly, unit){
 
 //Sets 'my location'. 
 function set_location(myPosition) {
-	alert("SET " + myPosition.title);
-	myPosition.setIcon();
-	markers.push(myPosition);
-	showMarkers();
+	myPosition.setMap(map);
+	myPosition.setVisible(true);
 }
 
 // removes marker
 function remove_location(myPosition){
-	alert("Remove " + myPosition.title);
-	markers.splice(myPosition);
-	showMarkers();
+	myPosition.setVisible(false);
 }
 
 
