@@ -21,9 +21,16 @@
 
 	<!-- Coords test -->
 	<label for="unit-lat">Latitude</label>
-	<input type="text" class="form-control" placeholder="{{testCtrl.currentLat}}" />
+	<div class="form-group has-feedback">
+		<input type="text" class="form-control" placeholder="{{testCtrl.currentLat}}" />
+		<i ng-show="testCtrl.locationLock == true" class="glyphicon glyphicon-lock form-control-feedback"></i>	
+	</div>
+
 	<label for="unit-lng">Longitude</label>
-	<input type="text" class="form-control" placeholder="{{testCtrl.currentLng}}"></input>
+	<div class="form-group has-feedback">
+		<input type="text" class="form-control" placeholder="{{testCtrl.currentLng}}"></input>
+		<i ng-show="testCtrl.locationLock == true" class="glyphicon glyphicon-lock form-control-feedback"></i>
+	</div>
 
 	<!-- Buttons -->
 	<div class="pull-right" style="margin-top: 10px;">

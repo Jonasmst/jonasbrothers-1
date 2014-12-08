@@ -80,44 +80,45 @@ app.controller('TestController', ['$scope', '$http', function($scope, $http) {
     testCtrl.currentLat = 0;
     testCtrl.currentLng = 0;
     testCtrl.locationLock = false;
-
+    init();
 	// URL for orgunits-API
 	//var apiUrl = "http://inf5750-14.uio.no/api/organisationUnits.json?pageSize=1332";
 
 	// Tweaked URL to include coordinates (if applicable) for the facility.
 	// Not all facilities have coordinates. Figure out how to correctly represent those we can.
 	//var apiUrl = "http://inf5750-14.uio.no/api/organisationUnits.json?fields=:identifiable,coordinates,level&pageSize=1332";
+    function init(){
+    	var apiUrl = "http://inf5750-14.uio.no/api/organisationUnits.json?fields=:identifiable,coordinates,level,shortName,parent&pageSize=2000";
 
-	var apiUrl = "http://inf5750-14.uio.no/api/organisationUnits.json?fields=:identifiable,coordinates,level,shortName,parent&pageSize=2000";
+    	// Cross-site redirect error solution: Run chrome with --disable-web-security
+    	var base64 = "YWRtaW46ZGlzdHJpY3Q=";
+    	$http.get(apiUrl, {headers: {'Authorization': 'Basic YWRtaW46ZGlzdHJpY3Q='}}).
+    	success(function(data) {
+    		testCtrl.allOrgUnits = data.organisationUnits;
 
-	// Cross-site redirect error solution: Run chrome with --disable-web-security
-	var base64 = "YWRtaW46ZGlzdHJpY3Q=";
-	$http.get(apiUrl, {headers: {'Authorization': 'Basic YWRtaW46ZGlzdHJpY3Q='}}).
-	success(function(data) {
-		testCtrl.allOrgUnits = data.organisationUnits;
+    		// Log all the info
+    		//console.log(testCtrl.allOrgUnits);
 
-		// Log all the info
-		//console.log(testCtrl.allOrgUnits);
+    		// Reads all the coordinates.
+    		for (i = 0; i < testCtrl.allOrgUnits.length; i++)
+    			if(testCtrl.allOrgUnits[i].coordinates != undefined && testCtrl.allOrgUnits[i].coordinates.length < 200)
+    				testCtrl.geoCoords.push(new Array(testCtrl.allOrgUnits[i].name, testCtrl.allOrgUnits[i].coordinates.substring(1,testCtrl.allOrgUnits[i].coordinates.length-1).split(",")));
 
-		// Reads all the coordinates.
-		for (i = 0; i < testCtrl.allOrgUnits.length; i++)
-			if(testCtrl.allOrgUnits[i].coordinates != undefined && testCtrl.allOrgUnits[i].coordinates.length < 200)
-				testCtrl.geoCoords.push(new Array(testCtrl.allOrgUnits[i].name, testCtrl.allOrgUnits[i].coordinates.substring(1,testCtrl.allOrgUnits[i].coordinates.length-1).split(",")));
+    		// Add the coordinates to the map.
+    		addMarkers(testCtrl.geoCoords);
 
-		// Add the coordinates to the map.
-		addMarkers(testCtrl.geoCoords);
+    		// Create border-polygons for all the organisation units/groups with coordinates.
+    		for(i in testCtrl.allOrgUnits)
+    			if((testCtrl.allOrgUnits[i].level == 3 || testCtrl.allOrgUnits[i].level == 2) &&
+    					testCtrl.allOrgUnits[i].coordinates)
+    				createPolygon(testCtrl.allOrgUnits[i]);
 
-		// Create border-polygons for all the organisation units/groups with coordinates.
-		for(i in testCtrl.allOrgUnits)
-			if((testCtrl.allOrgUnits[i].level == 3 || testCtrl.allOrgUnits[i].level == 2) &&
-					testCtrl.allOrgUnits[i].coordinates)
-				createPolygon(testCtrl.allOrgUnits[i]);
-
-        console.log(testCtrl.allOrgUnits);
-	}).
-	error(function(data, status, headers, config) {
-		alert("Error. Data: " + data);
-	});
+            console.log(testCtrl.allOrgUnits);
+    	}).
+    	error(function(data, status, headers, config) {
+    		alert("Error. Data: " + data);
+    	});
+    }
 
 	// Changes the color of the markers related to the clicked orgUnit/facility.
 	$scope.updateMap = function(orgUnit) {
@@ -226,6 +227,8 @@ app.controller('TestController', ['$scope', '$http', function($scope, $http) {
 		request.success(function(data) {
 			// TODO: Some kind of feedback? Angular automatically updates template.
 			alert("Update success!");
+            //Refreshes the data from db with the newly updated unit
+            init(); 
 		}).error(function(data, status) {
 			alert("Update error");
 		});
@@ -291,6 +294,9 @@ app.controller('TestController', ['$scope', '$http', function($scope, $http) {
 
             // Reset scope variable
             $scope.unit = undefined;
+
+            //Refreshes the data from the server with the newly created unit
+            init();
 
 		}).error(function(data, status) {
 			// Disable loading-animation

@@ -1,6 +1,7 @@
 //Implementation using Google Maps API.
 
 $(document).ready(initialize);
+var circle;
 var map;
 var blueMarker;
 var redMarker;
@@ -205,7 +206,6 @@ function contains(poly, unit){
 	return true;
 }
 
-
 //Sets 'my location'. 
 function set_location(position) {
 	//var latitude = position.coords.latitude;
@@ -228,7 +228,7 @@ function set_location(position) {
 	}
 	closestMarker.setIcon(redMarker);
 	// Add circle overlay and bind to marker
-	var circle = new google.maps.Circle({
+	circle = new google.maps.Circle({
 	  map: map,
 	  radius: closestDist * 1000 + 1,
 	  fillColor: '#AA0000',
@@ -262,6 +262,7 @@ function deg2rad(deg) {
 function remove_location(){
 	closestMarker.setIcon(blueMarker);
 	myPosition.setVisible(false);
+	circle.setVisible(false);
 }
 
 
