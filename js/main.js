@@ -171,7 +171,7 @@ app.controller('TestController', ['$scope', '$http', function($scope, $http) {
     // Updates current position (lat and long) after where the mouse-pointer is over the map.
     $scope.trackPosition = function() {
         // Disable borders.
-        testCtrl.showBorders = testCtrl.borderOptions[0];
+        //testCtrl.showBorders = testCtrl.borderOptions[0];
         
         if(testCtrl.locationLock == false) {
             testCtrl.currentLat = mousePosition.position.lat();
@@ -182,6 +182,11 @@ app.controller('TestController', ['$scope', '$http', function($scope, $http) {
     // Locks or unlocks (disable/enable) position-tracking.
     $scope.lockPosition = function() {
         testCtrl.locationLock = !testCtrl.locationLock;
+    }
+
+    // Clears borders to enable position tracking (doesnt work with overlays).
+    $scope.clearBorders = function() {
+        testCtrl.showBorders = testCtrl.borderOptions[0];
     }
 
 	/**
